@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: [v1.0][dist]*
+*Current version: v1.0*
 
 
 Getting started
@@ -49,7 +49,7 @@ We strongly encourage use of our official libraries for accessing the Divido API
 
 Install from source
 
-  `git clone git@github.com:divido/divido-php.git`
+  `git clone https://github.com/DividoFinancialServices/divido-api-php.git`
 
 
 Community libraries
@@ -456,13 +456,3 @@ Example `http://www.webshop.com/response.php`
 ``` html
 Example `http://www.webshop.com/success.html`
 ```
-
-
-
-
-
-
-
-
-
-
