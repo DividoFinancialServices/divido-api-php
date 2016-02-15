@@ -1,0 +1,20 @@
+{
+    "name": "divido/divido-php",
+    "description": "Divido PHP library",
+   	"keywords": [
+    	"divido",
+    	"payment processing",
+    	"instalments",
+    	"finance",
+    	"api"
+  	],
+  	"homepage": "https://divido.com/",
+    "require": {
+        "php": ">=5.3.0",
+    },
+    "autoload": {
+    	"psr-0": {
+       		"Divido":"."
+    	}
+  	}
+}
