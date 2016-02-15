@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.0*
+*Current version: v1.1*
 
 
 Getting started
@@ -16,6 +16,8 @@ There are several distinct parts of a complete integration with the Divido API:
  * Deal Calculator
  * Finances
  * Credit Request
+ * Fulfillment
+ 
 
 
 ### Deal Calculator
@@ -30,9 +32,16 @@ List Rate Card and all financial products available for a specific merchant.
 
 Initialite a new credit proposal
 
+### Credit Request
+
+Mark application as fulfilled
 
 Change log
 ------------
+
+#### 2016-01-28
+
+- Added fulfillment method
 
 #### 2015-06-21
 
@@ -59,11 +68,11 @@ Please submit a pull request to this page to add any missing libraries that shou
 
 #### Magento
 
-  - Divido for Magento
+  - [Divido for Magento](https://github.com/DividoFinancialServices/divido-magento)
 
-#### WP E-commerce
+#### WooCommerce
 
-  - Divido for WP E-commerce
+  - [Divido for WP E-commerce](https://wordpress.org/plugins/divido-for-woocommerce/)
 
 
 Using the API
@@ -178,6 +187,8 @@ JSON example
             "text":"RF - BNPL 12 Months",
             "interest_rate":0,
             "min_amount":0,
+            "min_deposit":1,
+            "max_deposit":30,
             "agreement_duration":48,
             "deferral_period":0
          },
@@ -187,6 +198,8 @@ JSON example
             "text":"RF - BNPL 09 Months",
             "interest_rate":0,
             "min_amount":0,
+            "min_deposit":1,
+            "max_deposit":30,
             "agreement_duration":48,
             "deferral_period":9
          }
@@ -233,8 +246,8 @@ JSON example
     "monthly_payment_amount": 150,  
     "total_repayable_amount": 1800,  
     "agreement_duration": 12,  
-    "rate_of_interest_percent": 7.5,  
-    "apr_representative_percent": 8.5  
+    "interest_rate": 0.0,  
+    "interest_type": "APR"
  }  
 ```
 
@@ -456,3 +469,65 @@ Example `http://www.webshop.com/response.php`
 ``` html
 Example `http://www.webshop.com/success.html`
 ```
+
+Fulfillment
+------------------
+
+Mark an application as fulfilled and initialise a payout from the underwriter.
+
+#### Example Request
+   `POST` https://secure.divido.com/v1/fulfillment `HTTP/1.1`
+
+
+``` javascript
+curl https://secure.divido.com/v1/fulfillment \
+-d merchant="demo_abc1234567890" \
+-d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d deliveryMethod="delivery" \
+-d trackingNumber="DHL291824419F" \
+-d comments="Order was delivered to the customer by DHL" \
+```
+
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "status": 'ok',
+    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+    "newStatus": "ACTION-LENDER"
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `demo_abc1234567890`
+```
+
+`application` - The application or proposal identifier. (*Required, String*)
+``` html
+Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
+```
+
+`deliveryMethod` - How the goods was delivered, can be either "store" or "delivery" (*Required, String*)
+``` html
+Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
+```
+
+`trackingNumber` - If the deliveryMethod is delivery and you have a tracking number (*Optional, String*)
+``` html
+Example `DHL291824419F`
+```
+
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+``` html
+Example `Order was delivered to the customer by DHL`
+```
+
