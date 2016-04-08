@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.1*
+*Current version: v1.1.1*
 
 
 Getting started
@@ -72,7 +72,7 @@ Please submit a pull request to this page to add any missing libraries that shou
 
 #### WooCommerce
 
-  - [Divido for WP E-commerce](https://wordpress.org/plugins/divido-for-woocommerce/)
+  - [Divido for WOoCommerce](https://wordpress.org/plugins/divido-for-woocommerce/)
 
 
 Using the API
