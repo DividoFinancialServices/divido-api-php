@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.1.1*
+*Current version: v1.1.2*
 
 
 Getting started
@@ -17,7 +17,7 @@ There are several distinct parts of a complete integration with the Divido API:
  * Finances
  * Credit Request
  * Fulfillment
- 
+ * Cancellation
 
 
 ### Deal Calculator
@@ -32,9 +32,13 @@ List Rate Card and all financial products available for a specific merchant.
 
 Initialite a new credit proposal
 
-### Credit Request
+### Fulfillment
 
 Mark application as fulfilled
+
+### Cancellation
+
+Mark application as cancelled
 
 Change log
 ------------
