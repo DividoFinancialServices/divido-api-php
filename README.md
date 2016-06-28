@@ -39,6 +39,10 @@ Mark application as fulfilled
 Change log
 ------------
 
+#### 2016-06-28
+
+- Added cancellation method
+
 #### 2016-01-28
 
 - Added fulfillment method
@@ -66,13 +70,21 @@ Community libraries
 
 Please submit a pull request to this page to add any missing libraries that should be featured here. Please note that Divido does not offer any support for community libraries.
 
-#### Magento
+#### Magento 1.*
 
-  - [Divido for Magento](https://github.com/DividoFinancialServices/divido-magento)
+  - [Divido for Magento 1.*](https://github.com/DividoFinancialServices/divido-magento)
+
+#### Magento 2
+
+  - [Divido for Magento 2](https://github.com/DividoFinancialServices/magento2-module)
 
 #### WooCommerce
 
-  - [Divido for WOoCommerce](https://wordpress.org/plugins/divido-for-woocommerce/)
+  - [Divido for WooCommerce](https://wordpress.org/plugins/divido-for-woocommerce/)
+
+#### OpenCart
+
+ - [Divido for OpenCart](https://github.com/DividoFinancialServices/divido-opencart)
 
 
 Using the API
@@ -156,7 +168,7 @@ Possible statuses
 
   - `FULFILLED` - Application fulfilled by Underwriter
 
-  - `CANCELED` - Application Canceled
+  - `CANCELLED` - Application Cancelled
 
   - `COMPLETED` - Application Completed
 
@@ -529,5 +541,54 @@ Example `DHL291824419F`
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Order was delivered to the customer by DHL`
+```
+
+Cancellation
+------------------
+
+Mark an application as cancelled and notify the underwriter.
+
+#### Example Request
+   `POST` https://secure.divido.com/v1/cancellation `HTTP/1.1`
+
+
+``` javascript
+curl https://secure.divido.com/v1/cancellation \
+-d merchant="demo_abc1234567890" \
+-d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d comments="Customer wished to cancelled the order" \
+```
+
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "status": 'ok',
+    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+    "newStatus": "CANCELLED"
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `demo_abc1234567890`
+```
+
+`application` - The application or proposal identifier. (*Required, String*)
+``` html
+Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
+```
+
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+``` html
+Example `Customer wished to cancelled the order`
 ```
 
