@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.1.2*
+*Current version: v1.2*
 
 
 Getting started
@@ -46,6 +46,9 @@ Change log
 #### 2016-06-28
 
 - Added cancellation method
+- Checkout URL
+- Bug fixes
+- Added more community libraries
 
 #### 2016-01-28
 
@@ -126,7 +129,6 @@ The API server will send a POST request to the `response_url` associated with th
 
 
 #### Parameters
-
 
 
 `application`   Application ID
@@ -339,6 +341,7 @@ curl https://secure.divido.com/v1/creditrequest \
 -d "products[2][quantity]=1" \
 -d "products[2][value]=100" \
 -d "response_url=http://www.webshop.com/response.php" \
+-d "checkout_url=http://www.webshop.com/checkout" \
 -d "redirect_url=http://www.webshop.com/success.html"
 ```
 
@@ -479,6 +482,11 @@ Example `1`
 `response_url` - The URL where we send notification about the payment (*Optional, String*)
 ``` html
 Example `http://www.webshop.com/response.php`
+```
+
+`checkout_url` - A URL to which Divido redirects the customer if they get declined or wishes to cancel their application (*Optional, String*)
+``` html
+Example `http://www.webshop.com/checkout`
 ```
 
 `redirect_url` - The URL the customer will get redirected to after a successful application (*Optional, String*)

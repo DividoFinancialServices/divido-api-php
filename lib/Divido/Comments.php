@@ -1,12 +1,12 @@
 <?php
 
-class Divido_Cancellation extends Divido_ApiResource
+class Divido_Comments extends Divido_ApiResource
 {
   /**
    * @param string $id The ID of the charge to retrieve.
    * @param string|null $apiKey
    *
-   * @return Divido_Cancellation
+   * @return Divido_Fulfillment
    */
   public static function retrieve($id, $apiKey=null)
   {
@@ -18,7 +18,7 @@ class Divido_Cancellation extends Divido_ApiResource
    * @param array|null $params
    * @param string|null $apiKey
    *
-   * @return array An array of Divido_Cancellation.
+   * @return array An array of Divido_Fulfillment.
    */
   public static function all($params=null, $apiKey=null)
   {
@@ -30,16 +30,16 @@ class Divido_Cancellation extends Divido_ApiResource
    * @param array|null $params
    * @param string|null $apiKey
    *
-   * @return Divido_Charge The created charge.
+   * @return Divido_Comment The created charge.
    */
-  public static function cancel($params=null, $merchant=null)
+  public static function create($params=null, $merchant=null)
   {
     $class = get_class();
-    return self::_scopedCancellationRequest($class, $params, $merchant);
+    return self::_scopedCommentRequest($class, $params, $merchant);
   }
 
   /**
-   * @return Divido_Cancellation The saved charge.
+   * @return Divido_Fulfillment The saved charge.
    */
   public function save()
   {

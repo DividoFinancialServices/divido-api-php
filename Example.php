@@ -42,6 +42,7 @@ if ($_POST) {
 		),
 	  ),
 	  "response_url"=>"http://www.webshop.com/callback.php",
+	  'checkout_url'=>'http://www.webshop.com/checkout',
 	  "redirect_url"=>"http://www.webshop.com/success.php",
 	));
 

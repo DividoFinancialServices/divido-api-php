@@ -128,9 +128,18 @@ abstract class Divido_ApiResource extends Divido_Object
     return Divido_Util::convertToDividoObject($response, $apiKey);
   }
 
-  protected static function _scopedCancelRequest($class, $params=null, $apiKey=null)
+  protected static function _scopedCancellationRequest($class, $params=null, $apiKey=null)
   {
     self::_validateCall('cancelRequest', $params, $apiKey);
+    $requestor = new Divido_ApiRequestor($apiKey);
+    $url = self::_scopedLsb($class, 'classUrl', $class);
+    list($response, $apiKey) = $requestor->request('post', $url, $params);
+    return Divido_Util::convertToDividoObject($response, $apiKey);
+  }
+
+  protected static function _scopedCommentRequest($class, $params=null, $apiKey=null)
+  {
+    self::_validateCall('commentRequest', $params, $apiKey);
     $requestor = new Divido_ApiRequestor($apiKey);
     $url = self::_scopedLsb($class, 'classUrl', $class);
     list($response, $apiKey) = $requestor->request('post', $url, $params);
