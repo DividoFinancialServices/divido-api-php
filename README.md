@@ -568,7 +568,7 @@ Mark an application as cancelled and notify the underwriter.
 curl https://secure.divido.com/v1/cancellation \
 -d merchant="demo_abc1234567890" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
--d comments="Customer wished to cancelled the order" \
+-d comments="Customer requested to cancelled the order" \
 ```
 
 
@@ -601,6 +601,6 @@ Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
-Example `Customer wished to cancelled the order`
+Example `Customer requested to cancelled the order`
 ```
 
