@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.2*
+*Current version: v1.3*
 
 
 Getting started
@@ -17,7 +17,10 @@ There are several distinct parts of a complete integration with the Divido API:
  * Finances
  * Credit Request
  * Fulfillment
+ * Refund
  * Cancellation
+ * List all applications
+ * Retrieve an application
 
 
 ### Deal Calculator
@@ -34,14 +37,36 @@ Initialite a new credit proposal
 
 ### Fulfillment
 
-Mark application as fulfilled
+Fulfill whole or part of application
+
+### Refund
+
+Refund part of application
 
 ### Cancellation
 
-Mark application as cancelled
+Cancel an application
+
+### List all applications
+
+Returns a list of your applications. The applications are returned sorted by creation date, with the most recently created applications appearing first.
+
+### Retrieve an application
+
+Retrieves the details of an existing application. Supply the application ID and the API will return the corresponding application.
+
 
 Change log
 ------------
+
+#### 2016-09-27
+
+- Added partial fulfillment
+- Added refund
+- Added list all applications
+- Added retrieve an application
+- Added new statuses
+- Bug fixes
 
 #### 2016-06-28
 
@@ -101,8 +126,8 @@ API endpoints
 ---------------
 To use the Divido API to query data, you will need to send a request to the correct endpoint. Request endpoints should depend on whether you wish to query the live or sandbox environment:
 
- - Sandbox: `https://secure.sandbox.divido.com`
- - Live: `https://secure.divido.com`
+ - Sandbox: `https://secure.sandbox.divido.com/v1/`
+ - Live: `https://secure.divido.com/v1/`
 
 HTTP response codes
 ---------------
@@ -164,13 +189,23 @@ Possible statuses
 
   - `ACCEPTED` - Application accepted by Underwriter
 
-  - `DEFERRED` - Application deferred by Underwriter, waiting for new status
+  - `REFERRED` - Application referred by Underwriter, waiting for new status
+  
+  - `ACTION-CUSTOMER` - Waiting for more information from customer
+ 
+  - `ACTION-LENDER` - Waiting for more information from Underwriter
 
   - `DECLINED` - Applicaiton declined by Underwriter
 
   - `DEPOSIT-PAID` - Deposit paid by customer
 
   - `SIGNED` - Customer have signed all contracts
+
+  - `AWAITING-FULFILLMENT` - Waiting for confirmation from Underwriter
+
+  - `AWAITING-CANCELLATION` - Waiting for confirmation from Underwriter  
+
+  - `PARTIAL-FULFILLED` - Application fulfilled by Underwriter
 
   - `FULFILLED` - Application fulfilled by Underwriter
 
@@ -497,7 +532,7 @@ Example `http://www.webshop.com/success.html`
 Fulfillment
 ------------------
 
-Mark an application as fulfilled and initialise a payout from the underwriter.
+Fulfill whole or part of application and initialise a payout from the underwriter.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/fulfillment `HTTP/1.1`
@@ -507,6 +542,7 @@ Mark an application as fulfilled and initialise a payout from the underwriter.
 curl https://secure.divido.com/v1/fulfillment \
 -d merchant="demo_abc1234567890" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d amount="1253.00" \
 -d deliveryMethod="delivery" \
 -d trackingNumber="DHL291824419F" \
 -d comments="Order was delivered to the customer by DHL" \
@@ -540,6 +576,11 @@ Example `demo_abc1234567890`
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 ```
 
+`amount` - Amount of the goods delivered, default gross amount of the application" (*Optional, Float*)
+``` html
+Example `1253.00`
+```
+
 `deliveryMethod` - How the goods was delivered, can be either "store" or "delivery" (*Required, String*)
 ``` html
 Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
@@ -550,10 +591,64 @@ Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
 Example `DHL291824419F`
 ```
 
-`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Order was delivered to the customer by DHL`
 ```
+
+Refund
+------------------
+
+Refund whole or part of application
+
+#### Example Request
+   `POST` https://secure.divido.com/v1/refund `HTTP/1.1`
+
+
+``` javascript
+curl https://secure.divido.com/v1/refund \
+-d merchant="demo_abc1234567890" \
+-d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d amount="200.00" \
+-d comments="Customer returned part of order" \
+```
+
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "status": 'ok',
+    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C"
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+```
+Example `demo_abc1234567890`
+```
+
+`application` - The application or proposal identifier. (*Required, String*)
+``` html
+Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
+```
+
+`amount` - Amount of the goods refunded (*Required, Float*)
+``` html
+Example `200.00`
+```
+
+`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+``` html
+Example `Customer returned part of order`
+```
+
 
 Cancellation
 ------------------
@@ -580,7 +675,7 @@ JSON example
 {
     "status": 'ok',
     "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-    "newStatus": "CANCELLED"
+    "newStatus": "AWAITING-CANCELLATION"
 }
 ```
 
@@ -599,8 +694,123 @@ Example `demo_abc1234567890`
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 ```
 
-`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Customer requested to cancelled the order`
 ```
 
+
+List all applications
+------------------
+
+Returns a list of your applications. The applications are returned sorted by creation date, with the most recently created applications appearing first.
+
+#### Example Request
+   `GET` https://secure.divido.com/v1/applications?merchant={MERCHANT}&status={STATUS}&page={PAGE} `HTTP/1.1`
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+     "status":"ok",
+     "applications":[
+         {
+            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+            "country":"GB",
+            "text":"RF - BNPL 12 Months",
+            "interest_rate":0,
+            "min_amount":0,
+            "min_deposit":1,
+            "max_deposit":30,
+            "agreement_duration":48,
+            "deferral_period":0
+         },
+         {
+            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+            "country":"GB",
+            "text":"RF - BNPL 09 Months",
+            "interest_rate":0,
+            "min_amount":0,
+            "min_deposit":1,
+            "max_deposit":30,
+            "agreement_duration":48,
+            "deferral_period":9
+         }
+     ]
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `demo_abc1234567890`
+```
+
+`country` - Filter by country code (*Optional, String*)
+
+``` html
+Example `GB`
+```
+
+`status` - Filter by status (*Optional, String*)
+
+``` html
+Example `SIGNED`
+```
+
+`page` - Show page, default 1 (*Optional, String*)
+
+``` html
+Example `2`
+```
+
+Retrieve an applications
+------------------
+
+Retrieves the details of an existing application. Supply the application ID and the API will return the corresponding application.
+
+#### Example Request
+   `GET` https://secure.divido.com/v1/applications?merchant={MERCHANT}&id={id} `HTTP/1.1`
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+     "status":"ok",
+     "application": {
+            "id":"C84047A6D-89B2-FECF-D2B4-168444F5178C",
+            "country":"GB",
+            "text":"RF - BNPL 12 Months",
+            "interest_rate":0,
+            "min_amount":0,
+            "min_deposit":1,
+            "max_deposit":30,
+            "agreement_duration":48,
+            "deferral_period":0
+     }
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `demo_abc1234567890`
+```
+
+`id` - Application id (*Required, String*)
+
+``` html
+Example `C84047A6D-89B2-FECF-D2B4-168444F5178C`
+```
