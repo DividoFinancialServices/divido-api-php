@@ -545,7 +545,7 @@ curl https://secure.divido.com/v1/fulfillment \
 -d amount="1253.00" \
 -d deliveryMethod="delivery" \
 -d trackingNumber="DHL291824419F" \
--d comments="Order was delivered to the customer by DHL" \
+-d comment="Order was delivered to the customer by DHL" \
 ```
 
 
@@ -591,7 +591,7 @@ Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
 Example `DHL291824419F`
 ```
 
-`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Order was delivered to the customer by DHL`
 ```
@@ -610,7 +610,7 @@ curl https://secure.divido.com/v1/refund \
 -d merchant="demo_abc1234567890" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
 -d amount="200.00" \
--d comments="Customer returned part of order" \
+-d comment="Customer returned part of order" \
 ```
 
 
@@ -644,7 +644,7 @@ Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 Example `200.00`
 ```
 
-`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Customer returned part of order`
 ```
@@ -663,7 +663,7 @@ Mark an application as cancelled and notify the underwriter.
 curl https://secure.divido.com/v1/cancellation \
 -d merchant="demo_abc1234567890" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
--d comments="Customer requested to cancelled the order" \
+-d comment="Customer requested to cancelled the order" \
 ```
 
 
@@ -694,7 +694,7 @@ Example `demo_abc1234567890`
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 ```
 
-`comments` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 ``` html
 Example `Customer requested to cancelled the order`
 ```
