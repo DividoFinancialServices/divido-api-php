@@ -110,8 +110,9 @@ class Divido_ApiRequestor
   {
     if (!$params)
       $params = array();
-    list($rbody, $rcode, $myApiKey) =
-      $this->_requestRaw($method, $url, $params);
+    
+    list($rbody, $rcode, $myApiKey) = $this->_requestRaw($method, $url, $params);
+
     $resp = $this->_interpretResponse($rbody, $rcode);
     return array($resp, $myApiKey);
   }
@@ -261,6 +262,7 @@ class Divido_ApiRequestor
     }
     
     $absUrl = self::utf8($absUrl);
+    // print "absUrl: ".$absUrl."<br />";
     $opts[CURLOPT_URL] = $absUrl;
     $opts[CURLOPT_RETURNTRANSFER] = true;
     $opts[CURLOPT_CONNECTTIMEOUT] = 30;
@@ -272,6 +274,8 @@ class Divido_ApiRequestor
 
     curl_setopt_array($curl, $opts);
     $rbody = curl_exec($curl);
+
+    // print "rbody: ".$rbody;exit;
 
     if (!defined('CURLE_SSL_CACERT_BADFILE')) {
       define('CURLE_SSL_CACERT_BADFILE', 77);  // constant not defined in PHP

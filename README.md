@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.3*
+*Current version: v1.7*
 
 
 Getting started
@@ -13,19 +13,22 @@ Getting started
 
 There are several distinct parts of a complete integration with the Divido API:
 
- * Deal Calculator
+<!-- * Deal Calculator-->
  * Finances
  * Credit Request
- * Fulfillment
- * Refund
+ * Activation
  * Cancellation
+ * Refund
  * List all applications
  * Retrieve an application
+ * Reporting / List all payment batches
+ * Reporting / Retrieve records from a payment batch
 
-
+<!--
 ### Deal Calculator
 
 Calculate APR, monthly repayments, duration etc
+-->
 
 ### Finances
 
@@ -33,31 +36,65 @@ List Rate Card and all financial products available for a specific merchant.
 
 ### Credit Request
 
-Initialite a new credit proposal
+Initiate a new credit proposal
 
-### Fulfillment
+### Activation
 
-Fulfill whole or part of application
-
-### Refund
-
-Refund part of application
+Activate whole or part of application
 
 ### Cancellation
 
-Cancel an application
+Cancel a deactivated application
+
+### Refund
+
+Refund a part or whole of an activated application
 
 ### List all applications
 
 Returns a list of your applications. The applications are returned sorted by creation date, with the most recently created applications appearing first.
 
 ### Retrieve an application
-
+	
 Retrieves the details of an existing application. Supply the application ID and the API will return the corresponding application.
+
+### Reporting / List all payment batches
+	
+Retrieves all payment batches.
+
+### Reporting / Retrieve records from a payment batch
+	
+Retrieves the content of a payment batch. Supply the batch ID and the API will return all records.
 
 
 Change log
 ------------
+
+#### 2016-11-07
+
+- Added product amount for refund and activation
+
+#### 2016-11-02
+
+- Added product lines for refund and activation
+
+#### 2016-11-01
+
+- Renamed fulfillment to activation
+- Added reporting
+
+
+#### 2016-10-30
+
+- Added refunds, fulfillments, fulfillmentStatus to respones
+
+#### 2016-10-18
+
+- Removed Deal Calculator
+- Added new statuses
+- Changed the product dataset
+- Updated the responses from the API
+
 
 #### 2016-09-27
 
@@ -135,7 +172,7 @@ You may encounter the following response codes. Any unsuccessful response codes 
 
  - `200` The request has succeeded.
 
- - `201` The request has been fulfilled and resulted in a new resource being created. The newly create resource can be referenced by the URI(s) returned in the entity of the response, with the most specific URI for the resource given by a Location header field.
+ - `201` The request has been fulfilled and resulted in a new resource being created. The newly created resource can be referenced by the URI(s) returned in the entity of the response, with the most specific URI for the resource given by a Location header field.
 
  - `404` Not Found. The requested resource was not found. The response body will explain which resource was not found.
 
@@ -187,31 +224,43 @@ JSON example
 Possible statuses
 ---------------
 
-  - `ACCEPTED` - Application accepted by Underwriter
+  - `DRAFT` - Proposal send to Underwriter, waiting for decision
 
-  - `REFERRED` - Application referred by Underwriter, waiting for new status
-  
-  - `ACTION-CUSTOMER` - Waiting for more information from customer
- 
-  - `ACTION-LENDER` - Waiting for more information from Underwriter
+  - `ACCEPTED` - Application accepted by Underwriter
 
   - `DECLINED` - Applicaiton declined by Underwriter
 
+  - `REFERRED` - Application referred by Underwriter, waiting for new status
+  
+  - `INFO-NEEDED` - More information is required before decision
+
+  - `ACTION-CUSTOMER` - Waiting for more information from Customer
+
+  - `ACTION-RETAILER` - Waiting for more information from Merchant
+ 
+  - `ACTION-LENDER` - Waiting for more information from Underwriter
+
   - `DEPOSIT-PAID` - Deposit paid by customer
 
-  - `SIGNED` - Customer have signed all contracts
+  - `SIGNED` - Customer has signed all contracts
 
-  - `AWAITING-FULFILLMENT` - Waiting for confirmation from Underwriter
+  - `AWAITING-ACTIVATION` - Waiting for confirmation from Underwriter
 
   - `AWAITING-CANCELLATION` - Waiting for confirmation from Underwriter  
 
-  - `PARTIAL-FULFILLED` - Application fulfilled by Underwriter
+  - `PARTIALLY-ACTIVATED` - Application partially activated by merchant
 
-  - `FULFILLED` - Application fulfilled by Underwriter
+  - `ACTIVATED` - Application activated and confirmed by Underwriter
 
-  - `CANCELLED` - Application Cancelled
+  - `CANCELLED` - Application cancelled
 
-  - `COMPLETED` - Application Completed
+  - `REFUNDED` - Whole Application refunded
+
+  - `DISPUTED` - Dispute raised by Merchant or Underwriter
+
+  - `LOAN-REVERSAL` - Loan reversal in progress
+
+  - `COMPLETED` - Application completed (after cool down period)
 
 
 
@@ -232,31 +281,31 @@ JSON example
 
 ``` json
 {
-     "status":"ok",
-     "finances":[
-         {
-            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-            "country":"GB",
-            "text":"RF - BNPL 12 Months",
-            "interest_rate":0,
-            "min_amount":0,
-            "min_deposit":1,
-            "max_deposit":30,
-            "agreement_duration":48,
-            "deferral_period":0
-         },
-         {
-            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-            "country":"GB",
-            "text":"RF - BNPL 09 Months",
-            "interest_rate":0,
-            "min_amount":0,
-            "min_deposit":1,
-            "max_deposit":30,
-            "agreement_duration":48,
-            "deferral_period":9
-         }
-     ]
+    "finances": [
+        {
+            "agreement_duration": 6,
+            "country": "GB",
+            "deferral_period": 0,
+            "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+            "interest_rate": 0,
+            "max_deposit": 50,
+            "min_amount": 150,
+            "min_deposit": 0,
+            "text": "6 Month 0% Interest Free"
+        },
+        {
+            "agreement_duration": 12,
+            "country": "GB",
+            "deferral_period": 0,
+            "id": "F284D5F1D-E8AF-D4B7-E1AF-A352F6087352",
+            "interest_rate": 0,
+            "max_deposit": 50,
+            "min_amount": 150,
+            "min_deposit": 0,
+            "text": "12 Month 0% Interest Free"
+        }
+    ],
+    "status": "ok"
 }
 ```
 
@@ -267,17 +316,17 @@ JSON example
     -  Your unique account identifier (*Required, String*)
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
-`country` - The country code (*Required, String*)
+`country` - The country code (*Optional, String*)
 
-``` html
+``` 
 Example `GB`
 ```
   
 
-
+<!--
 Deal Calculator
 ------------------
 
@@ -304,46 +353,46 @@ JSON example
  }  
 ```
 
-
 #### Parameters
 
 `merchant` 
     -  Your unique account identifier (*Required, String*)
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `amount`
   - The total value of the order (*Required, Float*)
 
-``` html
+``` 
 Example `2000.00`
 ```
 
   `deposit` - The value of the deposit. (*Required, Float*)
 
-``` html
+``` 
 Example `200`
 ```
 
   `country` - The country code (*Required, String*)
 
-``` html
+``` 
 Example `GB`
 ```
 
   `finance` - The finance code (*Required, String*)
 
-``` html
+``` 
 Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
 ```
+-->
 
 
 Credit Request
 ------------------
 
-The deal calculator calculates the payment terms for various terms and deposits.
+The credit request creates a new proposal and return a URL to the Divido application form.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/creditrequest `HTTP/1.1`
@@ -351,33 +400,51 @@ The deal calculator calculates the payment terms for various terms and deposits.
 
 ``` javascript
 curl https://secure.divido.com/v1/creditrequest \
--d merchant=demo_abc1234567890 \
+-d merchant=live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 \
 -d deposit=100 \
--d finance=FAAC243AC-499A-84AF-DBBA-F58B9F7E798C \
+-d finance=F06895E17-EE96-926E-7137-37BCABB9DCF7 \
 -d country=GB \
 -d language=EN \
 -d currency=GBP \
--d "customer[title]=Mr" \
--d "customer[first_name]=John" \
--d "customer[last_name]=Doe" \
+-d amount=1197.5 \
+-d "customer[firstName]=John" \
+-d "customer[middleNames]=L" \
+-d "customer[lastName]=Doe" \
 -d "customer[country]=GB" \
--d "customer[postcode]=EC2A 4BX" \
+-d "customer[address][postcode]=EC2A 4BX" \
+-d "customer[address][street]=High street" \
+-d "customer[address][flat]=B" \
+-d "customer[address][buildingNumber]=115" \
+-d "customer[address][buildingName]=Amanda apartments" \
+-d "customer[address][town]=London" \
+-d "customer[address][monthsAtAddress]=60" \
+-d "customer[gender]=male" \
 -d "customer[email]=john.doe@domain.com" \
--d "customer[phone_number]=+44201234567" \
--d "customer[mobile_number]=+44701234567" \
+-d "customer[phoneNumber]=+44201234567" \
+-d "customer[dateOfBirthYear]=1967" \
+-d "customer[dateOfBirthMonth]=07" \
+-d "customer[dateOfBirthDay]=01" \
+-d "customer[bank][sortCode]=123456" \
+-d "customer[bank][accountNumber]=12345678" \
 -d "metadata[Invoice Number]=844001" \
 -d "metadata[Order Number]=100019" \
--d "products[1][type]=product" \
--d "products[1][text]=Gibson Les Paul Studio Raw Guitar" \
+-d "products[1][sku]=GIB100" \
+-d "products[1][name]=Gibson Les Paul Studio Raw Guitar" \
 -d "products[1][quantity]=1" \
--d "products[1][value]=1153.00" \
--d "products[2][type]=service" \
--d "products[2][text]=Restring Upgrade" \
--d "products[2][quantity]=1" \
--d "products[2][value]=100" \
--d "response_url=http://www.webshop.com/response.php" \
--d "checkout_url=http://www.webshop.com/checkout" \
--d "redirect_url=http://www.webshop.com/success.html"
+-d "products[1][price]=1153.00" \
+-d "products[1][vat]=20" \
+-d "products[1][unit]=pcs" \
+-d "products[1][image]=http://www.webshop.com/images/GIB100.png" \
+-d "products[2][sku]=H10" \
+-d "products[2][name]=Restring Upgrade" \
+-d "products[2][quantity]=0.5" \
+-d "products[2][price]=89" \
+-d "products[2][vat]=20" \
+-d "products[2][unit]=hour" \
+-d "products[2][attributes]=1" \
+-d "responseUrl=http://www.webshop.com/response.php" \
+-d "checkoutUrl=http://www.webshop.com/checkout" \
+-d "redirectUrl=http://www.webshop.com/success.html"
 ```
 
 
@@ -387,10 +454,10 @@ JSON example
 
 ``` json
 {
-    "status": 'ok',
-    "id": 128412,
-    "url": "https://secure.divido.com/token/da2e7559ac104cf3f21003e5fde4e9f1",
-    "token": "da2e7559ac104cf3f21003e5fde4e9f1"
+    "id": "PD66DF728-5646-22E3-EF6F-CD3D2D094170",
+    "status": "ok",
+    "token": "bcaa33546495965c4c8b3dc41d8582a1",
+    "url": "https://secure.divido.com/token/bcaa33546495965c4c8b3dc41d8582a1"
 }
 ```
 
@@ -399,150 +466,262 @@ JSON example
 
 `merchant` 
     -  Your unique account identifier (*Required, String*)
+    -  
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `deposit` - The value of the deposit. (*Required, Float*)
-``` html
-Example `200`
+
+``` 
+Example `100`
 ```
 
 `finance` - The finance code (*Required, String*)
-``` html
-Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
+
+``` 
+Example `F23B150D4-9D00-724A-6DFA-A1E726F6761A`
 ```
 
 `country` - The country code (*Required, String*)
-``` html
+
+``` 
 Example `GB`
 ```
 
 `language` - The country code (*Required, String*)
-``` html
-Example `en`
+
+``` 
+Example `EN`
 ```
 
 `currency` - The currency code (*Required, String*)
-``` html
+
+``` 
 Example `GBP`
 ```
 
-`customer['title']` - Customer title (*Optional, String*)
-``` html
-Example `Mrs`
+`amount` - Order total in same currency as proposal. Used to validate the total from product line items. (*Optional, Float*)
+
+``` 
+Example `1197.5`
 ```
 
 `customer['firstName']` - Customer first name (*Optional, String*)
-``` html
+
+``` 
 Example `Jane`
 ```
 
+`customer['middleNames']` - Customer middle names (*Optional, String*)
+
+``` 
+Example `L`
+```
+
 `customer['lastName']` - Customer last name (*Optional, String*)
-``` html
+
+``` 
 Example `Doe`
 ```
 
 `customer['country']` - Customer country (*Optional, String*)
-``` html
+
+``` 
 Example `GB`
 ```
 
-`customer['postcode']` - Customer postcode (*Optional, String*)
-``` html
+`customer['address']['postcode']` - Customer postcode (*Optional, String*
+
+``` 
 Example `EC2A 4BX`
 ```
 
-`customer['email']` - Customer postcode (*Optional, String*)
-``` html
+`customer['address']['street']` - Customer street (*Optional, String*)
+
+``` 
+Example `High street`
+```
+
+`customer['address']['flat']` - Customer flat (*Optional, String*)
+
+``` 
+Example `B`
+```
+
+`customer['address']['buildingNumber']` - Customer building number (*Optional, String*)
+
+``` 
+Example `115`
+```
+
+`customer['address']['buildingName']` - Customer building name (*Optional, String*)
+
+``` 
+Example `Amanda apartments`
+```
+
+`customer['address']['town']` - Customer town (*Optional, String*)
+
+``` 
+Example `London`
+```
+
+`customer['address']['monthsAtAddress']` - Customer months at address (*Optional, String*)
+
+``` 
+Example `60`
+```
+
+`customer['gender']` - Customer gender (*Optional, String*)
+
+``` 
+Example `male`
+```
+
+`customer['email']` - Customer email (*Optional, String*)
+
+``` 
 Example `jane.doe@email.com`
 ```
 
-`customer['phone_number']` - Customer phone number (*Optional, String*)
-``` html
+`customer['phoneNumber']` - Customer phone number (*Optional, String*)
+
+``` 
 Example `0201234567`
 ```
 
-`customer['mobile_number']` - Customer mobile number (*Optional, String*)
-``` html
-Example `0701234567`
+`customer['dateOfBirthYear']` - Customer year of birth (*Optional, String*)
+
+``` 
+Example `1967`
+```
+
+`customer['dateOfBirthMonth']` - Customer month of birth (*Optional, String*)
+
+``` 
+Example `07`
+```
+
+`customer['dateOfBirthDay']` - Customer day of birth (*Optional, String*)
+
+``` 
+Example `01`
+```
+
+`customer['bank']['sortCode']` - Customer bank sort code (*Optional, String*)
+
+``` 
+Example `123456`
+```
+
+`customer['bank']['accountNumber']` - Customer bank account number (*Optional, String*)
+
+``` 
+Example `12345678`
 ```
 
 `metadata['key']` - metadata key (*Optional, String*)
-``` html
+
+``` 
 Example `Invoice Number`
 ```
 
 `metadata['value']` - metadata value (*Optional, String*)
-``` html
+
+``` 
 Example `844001`
 ```
 
-`products['1']['type']` - Product type, can be `product` or `service` (*Optional, String*)
-``` html
-Example `product`
+`products['1']['sku']` - Product SKU (*Optional, String*)
+
+``` 
+Example `GIB100`
 ```
 
-`products['1']['text']` - Product name/description (*Optional, String*)
-``` html
+`products['1']['name']` - Product name/description (*Optional, String*)
+
+``` 
 Example `Gibson Les Paul Studio Raw Guitar`
 ```
 
 `products['1']['quantity']` - Product quantity (*Optional, String*)
-``` html
+
+``` 
 Example `1`
 ```
 
-`products['1']['value']` - Product value in same currency as proposal (*Optional, String*)
-``` html
+`products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
+
+``` 
 Example `1153.00`
 ```
+`products['1']['vat']` - Product VAT percentage (*Optional, String*)
 
-`products['2']['type']` - Product type, can be `product` or `service` (*Optional, String*)
-``` html
-Example `service`
+``` 
+Example `20`
 ```
 
-`products['2']['text']` - Product name/description (*Optional, String*)
-``` html
-Example `Restring Upgrade`
+`products['1']['unit']` - Product unit (*Optional, String*)
+``` 
+Example `pcs`
 ```
 
-`products['2']['quantity']` - Product quantity (*Optional, String*)
-``` html
-Example `1`
+`products['1']['image']` - Product image (*Optional, String*)
+``` 
+Example `http://www.webshop.com/images/GIB100.png`
 ```
 
-`response_url` - The URL where we send notification about the payment (*Optional, String*)
-``` html
+`products['1']['attributes']` - Product attributes (1=Service fee,2=Shipping fee,3=Payment fee,6=Discount, 10=Price is without VAT, 20=Line item with order VAT sum) (*Optional, String*)
+
+``` 
+Example `1,2`
+```
+
+`responseUrl` - The URL where we send notification about the payment (*Optional, String*)
+
+``` 
 Example `http://www.webshop.com/response.php`
 ```
 
-`checkout_url` - A URL to which Divido redirects the customer if they get declined or wishes to cancel their application (*Optional, String*)
-``` html
+`checkoutUrl` - A URL which Divido redirects the customer to if they get declined or wish to cancel their application (*Optional, String*)
+
+``` 
 Example `http://www.webshop.com/checkout`
 ```
 
-`redirect_url` - The URL the customer will get redirected to after a successful application (*Optional, String*)
-``` html
+`redirectUrl` - The URL the customer will get redirected to after a successful application (*Optional, String*)
+
+``` 
 Example `http://www.webshop.com/success.html`
 ```
 
-Fulfillment
+Activation
 ------------------
 
-Fulfill whole or part of application and initialise a payout from the underwriter.
+Activate whole or part of an application and initialise a payout from the underwriter. Activate part of the application by specifing the products that should be activated. If no product data is submitted, the whole application will be activated.
 
 #### Example Request
-   `POST` https://secure.divido.com/v1/fulfillment `HTTP/1.1`
+   `POST` https://secure.divido.com/v1/activation `HTTP/1.1`
 
 
 ``` javascript
-curl https://secure.divido.com/v1/fulfillment \
--d merchant="demo_abc1234567890" \
+curl https://secure.divido.com/v1/activation \
+-d merchant="live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
--d amount="1253.00" \
+-d "products[1][sku]=GIB100" \
+-d "products[1][name]=Gibson Les Paul Studio Raw Guitar" \
+-d "products[1][quantity]=1" \
+-d "products[1][price]=1153.00" \
+-d "products[1][vat]=20" \
+-d "products[2][sku]=H10" \
+-d "products[2][name]=Restring Upgrade" \
+-d "products[2][quantity]=0.5" \
+-d "products[2][price]=89" \
+-d "products[2][vat]=20" \
+-d "products[2][attributes]=1" \
+-d amount=1197.5 \
 -d deliveryMethod="delivery" \
 -d trackingNumber="DHL291824419F" \
 -d comment="Order was delivered to the customer by DHL" \
@@ -555,105 +734,103 @@ JSON example
 
 ``` json
 {
-    "status": 'ok',
-    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-    "newStatus": "ACTION-LENDER"
+    "result": {
+        "creditAmount": 1097.5,
+        "depositAmount": 100,
+        "depositStatus": "PAID-BY-CARD",
+        "activatedAmount": 1197.5,
+        "activationStatus": "AWAITING-ACTIVATION",
+        "activations": [
+            {
+                "amount": 1197.5,
+                "comment": "Order was delivered to the customer by DHL",
+                "date": "2016-10-26 04:11",
+                "deliveryMethod": "delivery",
+                "trackingNumber": "DHL291824419F"
+            }
+        ],
+        "id": "C8A05742F-3040-44EC-C252-050FD8869F79",
+        "purchasePrice": 1197.5,
+        "refundedAmount": 0,
+        "refunds": [],
+        "status": "AWAITING-ACTIVATION"
+    },
+    "status": "ok"
 }
 ```
 
 
 #### Parameters
 
-`merchant` 
-    -  Your unique account identifier (*Required, String*)
+`merchant` - Your unique account identifier (*Required, String*)
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 ```
 
 `application` - The application or proposal identifier. (*Required, String*)
-``` html
+
+```
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 ```
 
-`amount` - Amount of the goods delivered, default gross amount of the application" (*Optional, Float*)
-``` html
-Example `1253.00`
+`products['1']['sku']` - Product SKU (*Optional, String*)
+
+``` 
+Example `GIB100`
 ```
 
-`deliveryMethod` - How the goods was delivered, can be either "store" or "delivery" (*Required, String*)
-``` html
-Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
+`products['1']['name']` - Product name/description (*Optional, String*)
+
+``` 
+Example `Gibson Les Paul Studio Raw Guitar`
+```
+
+`products['1']['quantity']` - Product quantity (*Optional, String*)
+
+``` 
+Example `1`
+```
+
+`products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
+
+``` 
+Example `1153.00`
+```
+`products['1']['vat']` - Product VAT percentage (*Optional, String*)
+
+``` 
+Example `20`
+```
+
+`amount` - Sum of the activated products (*Optional, String*)
+
+```
+Example `1197.5`
+```
+
+`deliveryMethod` - How the goods were delivered, can be either "store" or "delivery" (*Required, String*)
+
+```
+Example `delivery`
 ```
 
 `trackingNumber` - If the deliveryMethod is delivery and you have a tracking number (*Optional, String*)
-``` html
+
+```
 Example `DHL291824419F`
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
-``` html
+
+```
 Example `Order was delivered to the customer by DHL`
 ```
-
-Refund
-------------------
-
-Refund whole or part of application
-
-#### Example Request
-   `POST` https://secure.divido.com/v1/refund `HTTP/1.1`
-
-
-``` javascript
-curl https://secure.divido.com/v1/refund \
--d merchant="demo_abc1234567890" \
--d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
--d amount="200.00" \
--d comment="Customer returned part of order" \
-```
-
-
-#### Example Response
-
-JSON example
-
-``` json
-{
-    "status": 'ok',
-    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C"
-}
-```
-
-
-#### Parameters
-
-`merchant` 
-    -  Your unique account identifier (*Required, String*)
-```
-Example `demo_abc1234567890`
-```
-
-`application` - The application or proposal identifier. (*Required, String*)
-``` html
-Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
-```
-
-`amount` - Amount of the goods refunded (*Required, Float*)
-``` html
-Example `200.00`
-```
-
-`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
-``` html
-Example `Customer returned part of order`
-```
-
 
 Cancellation
 ------------------
 
-Mark an application as cancelled and notify the underwriter.
+Mark an application as cancelled and notify the underwriter, only possible if application is DRAFT, REFERRED, INFO-NEEDED, ACTION-CUSTOMER, ACTION-RETAILER, ACTION-LENDER, ACCEPTED, DEPOSIT-PAID, SIGNED.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/cancellation `HTTP/1.1`
@@ -661,9 +838,9 @@ Mark an application as cancelled and notify the underwriter.
 
 ``` javascript
 curl https://secure.divido.com/v1/cancellation \
--d merchant="demo_abc1234567890" \
+-d merchant="live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
--d comment="Customer requested to cancelled the order" \
+-d comment="Customer requested to cancelled the order"
 ```
 
 
@@ -673,31 +850,168 @@ JSON example
 
 ``` json
 {
-    "status": 'ok',
-    "application": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-    "newStatus": "AWAITING-CANCELLATION"
+    "result": {
+        "creditAmount": 1097.5,
+        "depositAmount": 100,
+        "depositStatus": "UNPAID",
+        "activatedAmount": 0,
+        "activationStatus": "AWAITING-ACTIVATION",
+        "activations": [],
+        "id": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+        "purchasePrice": 1197.5,
+        "refundedAmount": 0,
+        "refunds": [],
+        "status": "AWAITING-CANCELLATION"
+    },
+    "status": "ok"
 }
 ```
 
 
 #### Parameters
 
-`merchant` 
-    -  Your unique account identifier (*Required, String*)
-  
+`merchant` -  Your unique account identifier (*Required, String*)
+
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 ```
 
 `application` - The application or proposal identifier. (*Required, String*)
-``` html
-Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
+
+``` 
+Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C `
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
-``` html
+
+``` 
 Example `Customer requested to cancelled the order`
 ```
+
+Refund
+------------------
+
+Refund whole or part of an application, if the application is AWAITING-ACTIVATION, PARTIALLY-ACTIVATED, ACTIVATED or COMPLETED. For partial refund, specify the products that have been refunded. If no product data is submitted the whole application will be refunded.
+
+#### Example Request
+   `POST` https://secure.divido.com/v1/refund `HTTP/1.1`
+
+
+``` javascript
+curl https://secure.divido.com/v1/refund \
+-d merchant="live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102" \
+-d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d "products[1][sku]=H10" \
+-d "products[1][name]=Restring Upgrade" \
+-d "products[1][quantity]=0.5" \
+-d "products[1][price]=89" \
+-d "products[1][vat]=20" \
+-d "products[1][attributes]=1" \
+-d amount=44.5 \
+-d comment="Customer returned part of order"
+```
+
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "result": {
+        "creditAmount": 1097.5,
+        "depositAmount": 100,
+        "depositStatus": "PAID-BY-CARD",
+        "activatedAmount": 1197.5,
+        "activationStatus": "AWAITING-ACTIVATION",
+        "activations": [
+            {
+                "amount": 1197.5,
+                "comment": "Order was delivered to the customer by DHL",
+                "date": "2016-10-26 04:11",
+                "deliveryMethod": "delivery",
+                "trackingNumber": "DHL291824419F"
+            }
+        ],
+        "id": "C8A05742F-3040-44EC-C252-050FD8869F79",
+        "purchasePrice": 1197.5,
+        "refundedAmount": 44.5,
+        "refunds": [
+            {
+                "amount": 44.5,
+                "comment": "Customer returned part of order",
+                "date": "2016-10-26 04:14",
+                "status": "PENDING"
+            }
+        ],
+        "status": "AWAITING-ACTIVATION"
+    },
+    "status": "ok"
+}
+```
+
+
+#### Parameters
+
+`merchant`     -  Your unique account identifier (*Required, String*)
+
+```
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
+```
+
+`application` - The application or proposal identifier. (*Required, String*)
+
+``` 
+Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
+```
+
+`products['1']['sku']` - Product SKU (*Optional, String*)
+
+``` 
+Example `H10`
+```
+
+`products['1']['name']` - Product name/description (*Optional, String*)
+
+``` 
+Example `Restring Upgrade`
+```
+
+`products['1']['quantity']` - Product quantity (*Optional, String*)
+
+``` 
+Example `0.5`
+```
+
+`products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
+
+``` 
+Example `89`
+```
+`products['1']['vat']` - Product VAT percentage (*Optional, String*)
+
+``` 
+Example `20`
+```
+
+`products['1']['attributes']` - Product attributes (1=Service,2=Shipping fee,3=Payment fee, 10=Price is without VAT) (*Optional, String*)
+
+``` 
+Example `1,2`
+```
+
+`amount` - Sum of the refunded items (*Optional, String*)
+
+```
+Example `44.5`
+```
+
+`comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
+
+``` 
+Example `Customer returned part of order`
+```
+
 
 
 List all applications
@@ -714,31 +1028,136 @@ JSON example
 
 ``` json
 {
-     "status":"ok",
-     "applications":[
-         {
-            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-            "country":"GB",
-            "text":"RF - BNPL 12 Months",
-            "interest_rate":0,
-            "min_amount":0,
-            "min_deposit":1,
-            "max_deposit":30,
-            "agreement_duration":48,
-            "deferral_period":0
-         },
-         {
-            "id":"FAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
-            "country":"GB",
-            "text":"RF - BNPL 09 Months",
-            "interest_rate":0,
-            "min_amount":0,
-            "min_deposit":1,
-            "max_deposit":30,
-            "agreement_duration":48,
-            "deferral_period":9
-         }
-     ]
+    "itemsPerPage": 30,
+    "page": 1,
+    "records": [
+        {
+            "_creditAmount": "£ 1197.50",
+            "_depositAmount": "£ 0",
+            "_activatedAmount": "£ 1197.50",
+            "_monthlyPaymentAmount": "£ 199.58",
+            "_purchasePrice": "£ 1197.50",
+            "_refundedAmount": "£ 0",
+            "agreementDuration": 6,
+            "channel": {
+                "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
+                "name": "Webshop.com",
+                "type": "webshop"
+            },
+            "country": "GB",
+            "createdDate": "2016-10-26 04:18",
+            "creditAmount": 1197.5,
+            "currency": "GBP",
+            "deferralPeriod": 0,
+            "depositAmount": 0,
+            "depositReference": "",
+            "depositStatus": "NO-DEPOSIT",
+            "email": "john.doe@domain.com",
+            "finance": {
+                "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+                "maxDeposit": 50,
+                "minAmount": 150,
+                "minDeposit": 0,
+                "text": "6 Month 0% Interest Free"
+            },
+            "firstName": "John",
+            "activatedAmount": 1197.5,
+            "activations": [
+                {
+                    "_amount": "£ 1197.50",
+                    "amount": 1197.5,
+                    "comment": "",
+                    "date": "2016-10-26 04:20",
+                    "deliveryMethod": "delivery",
+                    "trackingNumber": ""
+                }
+            ],
+            "history": [
+                {
+                    "date": "2016-10-26 04:20",
+                    "status": "AWAITING-ACTIVATION",
+                    "text": "",
+                    "type": "status",
+                    "user": "James Weston"
+                },
+                {
+                    "date": "2016-10-26 04:18",
+                    "status": "SIGNED",
+                    "text": "",
+                    "type": "status",
+                    "user": ""
+                },
+                {
+                    "date": "2016-10-26 04:18",
+                    "status": "ACCEPTED",
+                    "text": "",
+                    "type": "status",
+                    "user": ""
+                },
+                {
+                    "date": "2016-10-26 04:18",
+                    "status": "",
+                    "text": "Customer entered gateway from 10.11.12.1",
+                    "type": "",
+                    "user": ""
+                }
+            ],
+            "id": "C92F7C65B-5C2D-6544-BB13-3E54243B9875",
+            "interestRate": 0,
+            "interestType": "simple",
+            "lastName": "Doe",
+            "lender": "Demo",
+            "lenderReference": "",
+            "metadata": {
+                "Invoice Number": "844001",
+                "Order Number": "100019"
+            },
+            "modifiedDate": "2016-10-26 04:20",
+            "monthlyPaymentAmount": 199.58,
+            "products": [
+                {
+                    "_price": "£ 1153",
+                    "_sum": "£ 1153",
+                    "image": "http://www.webshop.com/images/GIB100.png",
+                    "name": "Gibson Les Paul Studio Raw Guitar",
+                    "price": "1153.00",
+                    "quantity": 1,
+                    "sku": "GIB100",
+                    "sum": "1153.00",
+                    "unit": "pcs"
+                },
+                {
+                    "_price": "£ 89",
+                    "_sum": "£ 44.50",
+                    "image": "",
+                    "name": "Restring Upgrade",
+                    "price": "89.00",
+                    "quantity": 0.5,
+                    "sku": "H10",
+                    "sum": "44.50",
+                    "unit": "hour"
+                }
+            ],
+            "proposal": "PD56030F0-845C-ECF1-6118-0B26EFDCB273",
+            "proposalCreator": null,
+            "purchasePrice": 1197.5,
+            "refundedAmount": 0,
+            "refunds": [],
+            "status": "AWAITING-ACTIVATION",
+            "totalRepayableAmount": 1197.5
+        },
+        {
+        	...
+        },
+        {
+        	...
+        },
+        {
+        	...
+        }
+    ],
+    "status": "ok",
+    "totalItems": 4
 }
 ```
 
@@ -749,24 +1168,24 @@ JSON example
     -  Your unique account identifier (*Required, String*)
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `country` - Filter by country code (*Optional, String*)
 
-``` html
+``` 
 Example `GB`
 ```
 
 `status` - Filter by status (*Optional, String*)
 
-``` html
+``` 
 Example `SIGNED`
 ```
 
 `page` - Show page, default 1 (*Optional, String*)
 
-``` html
+``` 
 Example `2`
 ```
 
@@ -784,18 +1203,122 @@ JSON example
 
 ``` json
 {
-     "status":"ok",
-     "application": {
-            "id":"C84047A6D-89B2-FECF-D2B4-168444F5178C",
-            "country":"GB",
-            "text":"RF - BNPL 12 Months",
-            "interest_rate":0,
-            "min_amount":0,
-            "min_deposit":1,
-            "max_deposit":30,
-            "agreement_duration":48,
-            "deferral_period":0
-     }
+    "record": {
+        "_creditAmount": "£ 1197.50",
+        "_depositAmount": "£ 0",
+        "_activatedAmount": "£ 1197.50",
+        "_monthlyPaymentAmount": "£ 199.58",
+        "_purchasePrice": "£ 1197.50",
+        "_refundedAmount": "£ 0",
+        "agreementDuration": 6,
+        "channel": {
+            "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
+            "name": "Webshop.com",
+            "type": "webshop"
+        },
+        "country": "GB",
+        "createdDate": "2016-10-26 04:18",
+        "creditAmount": 1197.5,
+        "currency": "GBP",
+        "deferralPeriod": 0,
+        "depositAmount": 0,
+        "depositReference": "",
+        "depositStatus": "NO-DEPOSIT",
+        "email": "john.doe@domain.com",
+        "finance": {
+            "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+            "maxDeposit": 50,
+            "minAmount": 150,
+            "minDeposit": 0,
+            "text": "6 Month 0% Interest Free"
+        },
+        "firstName": "John",
+        "activatedAmount": 1197.5,
+        "activations": [
+            {
+                "_amount": "£ 1197.50",
+                "amount": 1197.5,
+                "comment": "",
+                "date": "2016-10-26 04:20",
+                "deliveryMethod": "delivery",
+                "trackingNumber": ""
+            }
+        ],
+        "history": [
+            {
+                "date": "2016-10-26 04:20",
+                "status": "AWAITING-ACTIVATION",
+                "text": "",
+                "type": "status",
+                "user": "James Weston"
+            },
+            {
+                "date": "2016-10-26 04:18",
+                "status": "SIGNED",
+                "text": "",
+                "type": "status",
+                "user": ""
+            },
+            {
+                "date": "2016-10-26 04:18",
+                "status": "ACCEPTED",
+                "text": "",
+                "type": "status",
+                "user": ""
+            },
+            {
+                "date": "2016-10-26 04:18",
+                "status": "",
+                "text": "Customer entered gateway from 10.11.12.1",
+                "type": "",
+                "user": ""
+            }
+        ],
+        "id": "C92F7C65B-5C2D-6544-BB13-3E54243B9875",
+        "interestRate": 0,
+        "interestType": "simple",
+        "lastName": "Doe",
+        "lender": "Demo",
+        "lenderReference": "",
+        "metadata": {
+            "Invoice Number": "844001",
+            "Order Number": "100019"
+        },
+        "modifiedDate": "2016-10-26 04:20",
+        "monthlyPaymentAmount": 199.58,
+        "products": [
+            {
+                "_price": "£ 1153",
+                "_sum": "£ 1153",
+                "image": "http://www.webshop.com/images/GIB100.png",
+                "name": "Gibson Les Paul Studio Raw Guitar",
+                "price": "1153.00",
+                "quantity": 1,
+                "sku": "GIB100",
+                "sum": "1153.00",
+                "unit": "pcs"
+            },
+            {
+                "_price": "£ 89",
+                "_sum": "£ 44.50",
+                "image": "",
+                "name": "Restring Upgrade",
+                "price": "89.00",
+                "quantity": 0.5,
+                "sku": "H10",
+                "sum": "44.50",
+                "unit": "hour"
+            }
+        ],
+        "proposal": "PD56030F0-845C-ECF1-6118-0B26EFDCB273",
+        "proposalCreator": null,
+        "purchasePrice": 1197.5,
+        "refundedAmount": 0,
+        "refunds": [],
+        "status": "AWAITING-ACTIVATION",
+        "totalRepayableAmount": 1197.5
+    },
+    "status": "ok"
 }
 ```
 
@@ -806,11 +1329,143 @@ JSON example
     -  Your unique account identifier (*Required, String*)
   
 ```
-Example `demo_abc1234567890`
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `id` - Application id (*Required, String*)
 
-``` html
+``` 
 Example `C84047A6D-89B2-FECF-D2B4-168444F5178C`
+```
+
+Reporting / List all payment batches
+------------------
+
+Retrieves all payment batches.
+
+#### Example Request
+   `GET` https://secure.divido.com/v1/payments?merchant={MERCHANT}&currency={CURRENCY}&lender={LENDER}&page={PAGE} `HTTP/1.1`
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "itemsPerPage": 30,
+    "page": 1,
+    "records": [
+        {
+            "currency": "GBP",
+            "date": "2016-04-14",
+            "id": "PB0506EBA-870B-FFC2-FCAB-250D1B1291BD",
+            "lender": {
+                "id": "L07F46CDF-5296-D190-1F2D-A1B5FD869B72",
+                "name": "Demo"
+            },
+            "merchant": {
+                "id": "M7470B82C-B1EE-158F-D965-CFFD3158992A",
+                "name": "Sofa & Table"
+            },
+            "records": 1,
+            "totalCreditAmount": 989,
+            "totalNetPayment": 1074.165,
+            "totalSubsidyAmount": 4.945
+        },
+        ...,
+        ...
+    ],
+    "status": "ok",
+    "totalItems": 3
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
+```
+
+`currency` - Filter by currency code (*Optional, String*)
+
+``` 
+Example `GBP`
+```
+
+`lender` - Filter by lender ID (*Optional, String*)
+
+``` 
+Example `L07F46CDF-5296-D190-1F2D-A1B5FD869B72 `
+```
+
+`page` - Show page, default 1 (*Optional, String*)
+
+``` 
+Example `2`
+```
+
+Reporting / Retrieve records from a payment batch
+------------------
+
+Retrieves the content of a payment batch. Supply the batch ID and the API will return all records.
+
+#### Example Request
+   `GET` https://secure.divido.com/v1/payments?merchant={MERCHANT}&id={id} `HTTP/1.1`
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "record": {
+        "currency": "GBP",
+        "date": "2016-04-14",
+        "id": "PB0506EBA-870B-FFC2-FCAB-250D1B1291BD",
+        "lender": {
+            "id": "L07F46CDF-5296-D190-1F2D-A1B5FD869B72",
+            "name": "Demo"
+        },
+        "totalCreditAmount": 989,
+        "totalNetPayment": 1074.165,
+        "totalSubsidyAmount": 4.945,
+        "transactions": [
+            {
+                "application": "CDD6CCE0C-8DC5-6EB4-9A08-45520484EB19",
+                "creditAmount": 989,
+                "customer": "HESELDEN, ANN",
+                "depositAmount": 100,
+                "finance": {
+                    "id": "F927FA596-6C9C-8376-A99B-70AE9A020F6B",
+                    "text": "0% 12 month - Demo Bank"
+                },
+                "netPaymentAmount": 1074.165,
+                "purchasePrice": 1089,
+                "reference": "267381",
+                "subsidyAmount": 4.945
+            }
+        ]
+    },
+    "status": "ok"
+}
+```
+
+
+#### Parameters
+
+`merchant` 
+    -  Your unique account identifier (*Required, String*)
+  
+```
+Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
+```
+
+`id` - Batch id (*Required, String*)
+
+``` 
+Example `PB0506EBA-870B-FFC2-FCAB-250D1B1291BD `
 ```
