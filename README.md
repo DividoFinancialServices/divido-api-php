@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.7*
+*Current version: v1.8*
 
 
 Getting started
@@ -69,6 +69,13 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+
+#### 2016-11-16
+
+- Added filter on proposal for List all applications
+- Updated the webhook response
+- Added reference in Credit Request
+
 
 #### 2016-11-07
 
@@ -195,11 +202,11 @@ The API server will send a POST request to the `response_url` associated with th
 
 `application`   Application ID
 
+`proposal`   Proposal ID
+
 `reference`   Third party reference (if supplied as part of the application) 
 
 `status`   New status
-
-`live`   False if webhook is sent from sandbox enviroment
 
 `metadata`   Metadata (if supplied as part of the application)
 
@@ -210,14 +217,16 @@ JSON example
 
 ``` json
 {
-    "application": 'C84047A6D-89B2-FECF-D2B4-168444F5178C',
-    "reference": 100024,
-    "status": 'SIGNED',
-    "live": true,
-    "metadata":  {
-       "Invoice Number":"844001",
-       "Order Number":"100019"
-    }
+    "application": "C84047A6D-89B2-FECF-D2B4-168444F5178C",
+    "event": "application-status-update",
+    "metadata": {
+        "Invoice Number": "844001",
+        "Order Number": "100019"
+    },
+    "name": "John Doe",
+    "proposal": "PAA717844-EE9D-78AF-D11C-EDCC1D180F87",
+    "reference": "100019",
+    "status": "ACCEPTED"
 }
 ```
 
@@ -407,6 +416,7 @@ curl https://secure.divido.com/v1/creditrequest \
 -d language=EN \
 -d currency=GBP \
 -d amount=1197.5 \
+-d reference=100019 \
 -d "customer[firstName]=John" \
 -d "customer[middleNames]=L" \
 -d "customer[lastName]=Doe" \
@@ -506,6 +516,12 @@ Example `GBP`
 
 ``` 
 Example `1197.5`
+```
+
+`reference` - Your intenral reference, will be returned in webhooks. (*Optional, Float*)
+
+``` 
+Example `100019`
 ```
 
 `customer['firstName']` - Customer first name (*Optional, String*)
@@ -1020,7 +1036,7 @@ List all applications
 Returns a list of your applications. The applications are returned sorted by creation date, with the most recently created applications appearing first.
 
 #### Example Request
-   `GET` https://secure.divido.com/v1/applications?merchant={MERCHANT}&status={STATUS}&page={PAGE} `HTTP/1.1`
+   `GET` https://secure.divido.com/v1/applications?merchant={MERCHANT}&proposal={PROPOSAL}&status={STATUS}&page={PAGE} `HTTP/1.1`
 
 #### Example Response
 
@@ -1183,6 +1199,12 @@ Example `GB`
 Example `SIGNED`
 ```
 
+`proposal` - Filter by proposal (*Optional, String*)
+
+``` 
+Example `PAA717844-EE9D-78AF-D11C-EDCC1D180F87`
+```
+
 `page` - Show page, default 1 (*Optional, String*)
 
 ``` 
@@ -1313,6 +1335,7 @@ JSON example
         "proposal": "PD56030F0-845C-ECF1-6118-0B26EFDCB273",
         "proposalCreator": null,
         "purchasePrice": 1197.5,
+        "reference": "100019",
         "refundedAmount": 0,
         "refunds": [],
         "status": "AWAITING-ACTIVATION",

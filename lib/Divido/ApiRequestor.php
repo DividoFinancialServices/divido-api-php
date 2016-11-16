@@ -229,13 +229,15 @@ class Divido_ApiRequestor
       self::$_preFlight = $this->checkSslCert($this->apiUrl());
     }
 	
+  /*
 	$myApiKey = $this->_apiKey;
     if (!$myApiKey)
       $myApiKey = Divido::$apiKey;
       
 	if (!isset($params['merchant'])) {
-		$params['merchant'] = $myApiKey;
+	 $params['merchant'] = $myApiKey;
 	}
+  */
 
     $curl = curl_init();
     $method = strtolower($method);
@@ -264,6 +266,13 @@ class Divido_ApiRequestor
     $absUrl = self::utf8($absUrl);
     // print "absUrl: ".$absUrl."<br />";
     $opts[CURLOPT_URL] = $absUrl;
+
+    /*
+    if (isset($myApiKey)) {
+      // $opts[CURLOPT_USERPWD] = $params['merchant'].":";
+      curl_setopt($curl,CURLOPT_USERPWD,$myApiKey.":");
+    }
+    */
     $opts[CURLOPT_RETURNTRANSFER] = true;
     $opts[CURLOPT_CONNECTTIMEOUT] = 30;
     $opts[CURLOPT_TIMEOUT] = 80;
@@ -274,8 +283,6 @@ class Divido_ApiRequestor
 
     curl_setopt_array($curl, $opts);
     $rbody = curl_exec($curl);
-
-    // print "rbody: ".$rbody;exit;
 
     if (!defined('CURLE_SSL_CACERT_BADFILE')) {
       define('CURLE_SSL_CACERT_BADFILE', 77);  // constant not defined in PHP
