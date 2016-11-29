@@ -17,9 +17,10 @@ class Divido_ApiRequestor
     );
   }
 
-  public function __construct($apiKey=null)
+  public function __construct($apiKey=null,$sharedSecret=null)
   {
     $this->_apiKey = $apiKey;
+    $this->_sharedSecret = $sharedSecret;
   }
 
   /**
@@ -169,6 +170,10 @@ class Divido_ApiRequestor
     if (!$myApiKey)
       $myApiKey = Divido::$apiKey;
 
+    $sharedSecret = $this->_sharedSecret;
+    if (!$sharedSecret)
+      $sharedSecret = Divido::$sharedSecret;
+
     if (!$myApiKey) {
       $msg = 'No API key provided.  (HINT: set your API key using '
            . '"Divido::setApiKey(<API-KEY>)".  You can generate API keys from '
@@ -188,12 +193,21 @@ class Divido_ApiRequestor
         'publisher' => 'divido',
         'uname' => $uname,
     );
+
     $headers = array(
         'X-Divido-Client-User-Agent: ' . json_encode($ua),
         'User-Agent: Divido/v1 PhpBindings/' . Divido::VERSION,
         'Authorization: Bearer ' . $myApiKey,
         'Content-Type: application/x-www-form-urlencoded',
     );
+
+    if (!empty($sharedSecret)) {
+      $string = $url."?".http_build_query($params);
+      $hmac = base64_encode(hash_hmac('sha256', $string, $sharedSecret, true));
+
+      $headers[] = 'X-DIVIDO-HMAC-SHA256: ' . $hmac;
+    }
+
     if (Divido::$apiVersion) {
       $headers[] = 'Divido-Version: ' . Divido::$apiVersion;
     }

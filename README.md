@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.8*
+*Current version: v1.8.1*
 
 
 Getting started
@@ -69,6 +69,11 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+
+#### 2016-11-28
+
+- Added reference on activate and refund
+- Security enhancement: Added support for signing all api calls with a shared secret, contact Divido Support for more info.
 
 #### 2016-11-16
 
@@ -740,6 +745,7 @@ curl https://secure.divido.com/v1/activation \
 -d amount=1197.5 \
 -d deliveryMethod="delivery" \
 -d trackingNumber="DHL291824419F" \
+-d reference="9482471" \
 -d comment="Order was delivered to the customer by DHL" \
 ```
 
@@ -762,6 +768,7 @@ JSON example
                 "comment": "Order was delivered to the customer by DHL",
                 "date": "2016-10-26 04:11",
                 "deliveryMethod": "delivery",
+                "reference": "9482471",
                 "trackingNumber": "DHL291824419F"
             }
         ],
@@ -835,6 +842,12 @@ Example `delivery`
 
 ```
 Example `DHL291824419F`
+```
+
+`reference` - Your reference to identify the activation (*Optional, String*)
+
+``` 
+Example `9482471 `
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
@@ -924,6 +937,7 @@ curl https://secure.divido.com/v1/refund \
 -d "products[1][vat]=20" \
 -d "products[1][attributes]=1" \
 -d amount=44.5 \
+-d reference="7321834" \
 -d comment="Customer returned part of order"
 ```
 
@@ -957,6 +971,7 @@ JSON example
                 "amount": 44.5,
                 "comment": "Customer returned part of order",
                 "date": "2016-10-26 04:14",
+                "reference": "7321834",
                 "status": "PENDING"
             }
         ],
@@ -1022,6 +1037,12 @@ Example `1,2`
 Example `44.5`
 ```
 
+`reference` - Your reference to identify the refund (*Optional, String*)
+
+``` 
+Example `7321834 `
+```
+
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 
 ``` 
@@ -1085,6 +1106,7 @@ JSON example
                     "comment": "",
                     "date": "2016-10-26 04:20",
                     "deliveryMethod": "delivery",
+                    "reference": "9482471",
                     "trackingNumber": ""
                 }
             ],
@@ -1263,6 +1285,7 @@ JSON example
                 "comment": "",
                 "date": "2016-10-26 04:20",
                 "deliveryMethod": "delivery",
+                "reference": "9482471",
                 "trackingNumber": ""
             }
         ],
