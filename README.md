@@ -74,10 +74,11 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 Change log
 ------------
 
-#### 2016-12-09
+#### 2016-12-20
 - Added Deal Calculator
 - Added directSign to Credit Request
 - Added Finalize Credit Request
+- Added activation status
 
 #### 2016-11-28
 
