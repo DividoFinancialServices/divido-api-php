@@ -202,7 +202,8 @@ class Divido_ApiRequestor
     );
 
     if (!empty($sharedSecret)) {
-      $string = $url."?".http_build_query($params);
+      $queryString = http_build_query($params);
+      $string = (strlen($queryString)) ? $url."?".$queryString:$url;
       $hmac = base64_encode(hash_hmac('sha256', $string, $sharedSecret, true));
 
       $headers[] = 'X-DIVIDO-HMAC-SHA256: ' . $hmac;
@@ -297,6 +298,10 @@ class Divido_ApiRequestor
 
     curl_setopt_array($curl, $opts);
     $rbody = curl_exec($curl);
+
+    // print_r($params);exit;
+    // print "url: ".$absUrl;Exit;
+    // print "rbody: ".$rbody;exit;
 
     if (!defined('CURLE_SSL_CACERT_BADFILE')) {
       define('CURLE_SSL_CACERT_BADFILE', 77);  // constant not defined in PHP

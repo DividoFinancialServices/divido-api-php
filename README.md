@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.8.1*
+*Current version: v1.9*
 
 
 Getting started
@@ -13,9 +13,10 @@ Getting started
 
 There are several distinct parts of a complete integration with the Divido API:
 
-<!-- * Deal Calculator-->
+ * Deal Calculator
  * Finances
  * Credit Request
+ * Finalize Credit Request
  * Activation
  * Cancellation
  * Refund
@@ -24,11 +25,10 @@ There are several distinct parts of a complete integration with the Divido API:
  * Reporting / List all payment batches
  * Reporting / Retrieve records from a payment batch
 
-<!--
+
 ### Deal Calculator
 
 Calculate APR, monthly repayments, duration etc
--->
 
 ### Finances
 
@@ -36,7 +36,11 @@ List Rate Card and all financial products available for a specific merchant.
 
 ### Credit Request
 
-Initiate a new credit proposal
+Create a new credit proposal and return an url to application form
+
+### Finalize Credit Request
+
+Finalize an existing accepted credit application, will update the loan agreement and return an url to the contract signing.
 
 ### Activation
 
@@ -69,6 +73,11 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+
+#### 2016-12-09
+- Added Deal Calculator
+- Added directSign to Credit Request
+- Added Finalize Credit Request
 
 #### 2016-11-28
 
@@ -340,7 +349,7 @@ Example `GB`
 ```
   
 
-<!--
+
 Deal Calculator
 ------------------
 
@@ -400,7 +409,7 @@ Example `GB`
 ``` 
 Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
 ```
--->
+
 
 
 Credit Request
@@ -417,6 +426,7 @@ curl https://secure.divido.com/v1/creditrequest \
 -d merchant=live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 \
 -d deposit=100 \
 -d finance=F06895E17-EE96-926E-7137-37BCABB9DCF7 \
+-d directSign=true \
 -d country=GB \
 -d language=EN \
 -d currency=GBP \
@@ -498,6 +508,13 @@ Example `100`
 ``` 
 Example `F23B150D4-9D00-724A-6DFA-A1E726F6761A`
 ```
+
+`directSign` - Whether or not to immediately go to signing after approval (*Optional, Boolean*, Default is `true`)
+
+``` 
+Example `true`
+```
+
 
 `country` - The country code (*Required, String*)
 
@@ -718,6 +735,53 @@ Example `http://www.webshop.com/checkout`
 Example `http://www.webshop.com/success.html`
 ```
 
+Finalize Credit Request
+------------------
+
+Finalize an existing accepted credit application, will update the loan agreement and return an url to the contract signing. This only applies to Credit Requests created directSign = false.
+
+#### Example Request
+   `POST` https://secure.divido.com/v1/creditrequest/finalize `HTTP/1.1`
+
+
+``` javascript
+curl https://secure.divido.com/v1/creditrequest \
+-d merchant=live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 \
+-d application=CAAC243AC-499A-84AF-DBBA-F58B9F7E798C \
+-d deposit=100 \
+-d finance=F06895E17-EE96-926E-7137-37BCABB9DCF7 \
+-d amount=1197.5 \
+-d "products[1][sku]=GIB100" \
+-d "products[1][name]=Gibson Les Paul Studio Raw Guitar" \
+-d "products[1][quantity]=1" \
+-d "products[1][price]=1153.00" \
+-d "products[1][vat]=20" \
+-d "products[1][unit]=pcs" \
+-d "products[1][image]=http://www.webshop.com/images/GIB100.png" \
+-d "products[2][sku]=H10" \
+-d "products[2][name]=Restring Upgrade" \
+-d "products[2][quantity]=0.5" \
+-d "products[2][price]=89" \
+-d "products[2][vat]=20" \
+-d "products[2][unit]=hour" \
+-d "products[2][attributes]=1" \
+-d "redirectUrl=http://www.webshop.com/success.html"
+```
+
+#### Example Response
+
+JSON example
+
+``` json
+{
+    "id": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+    "status": "ok",
+    "token": "bcaa33546495965c4c8b3dc41d8582a1",
+    "url": "https://secure.divido.com/token/bcaa33546495965c4c8b3dc41d8582a1"
+}
+```
+
+
 Activation
 ------------------
 
@@ -769,6 +833,7 @@ JSON example
                 "date": "2016-10-26 04:11",
                 "deliveryMethod": "delivery",
                 "reference": "9482471",
+                "status": "AWAITING-ACTIVATION",
                 "trackingNumber": "DHL291824419F"
             }
         ],
@@ -960,6 +1025,8 @@ JSON example
                 "comment": "Order was delivered to the customer by DHL",
                 "date": "2016-10-26 04:11",
                 "deliveryMethod": "delivery",
+                "reference": "9482471",
+                "status": "AWAITING-ACTIVATION",
                 "trackingNumber": "DHL291824419F"
             }
         ],

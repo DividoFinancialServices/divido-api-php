@@ -128,6 +128,16 @@ abstract class Divido_ApiResource extends Divido_Object
     return Divido_Util::convertToDividoObject($response, $apiKey);
   }
 
+  protected static function _scopedFinalizeRequest($class, $params=null, $apiKey=null)
+  {
+    self::_validateCall('finalizeRequest', $params, $apiKey);
+    $requestor = new Divido_ApiRequestor($apiKey);
+    $url = self::_scopedLsb($class, 'classUrl', $class);
+    $url = $url."/finalize";
+    list($response, $apiKey) = $requestor->request('post', $url, $params);
+    return Divido_Util::convertToDividoObject($response, $apiKey);
+  }
+
   protected static function _scopedFulfillRequest($class, $params=null, $apiKey=null)
   {
     self::_validateCall('fulfillRequest', $params, $apiKey);

@@ -30,12 +30,24 @@ class Divido_CreditRequest extends Divido_ApiResource
    * @param array|null $params
    * @param string|null $apiKey
    *
-   * @return Divido_Charge The created charge.
+   * @return Divido_Charge The created credit request.
    */
   public static function create($params=null, $merchant=null)
   {
     $class = get_class();
     return self::_scopedCreditRequest($class, $params, $merchant);
+  }
+
+  /**
+   * @param array|null $params
+   * @param string|null $apiKey
+   *
+   * @return Divido_Finalize The created charge.
+   */
+  public static function finalize($params=null, $merchant=null)
+  {
+    $class = get_class();
+    return self::_scopedFinalizeRequest($class, $params, $merchant);
   }
 
   /**
