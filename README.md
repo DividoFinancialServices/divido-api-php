@@ -74,6 +74,9 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 Change log
 ------------
 
+#### 2017-03-13
+- Added shipping address to Credit Request
+
 #### 2016-12-20
 - Added Deal Calculator
 - Added directSign to Credit Request
@@ -445,6 +448,12 @@ curl https://secure.divido.com/v1/creditrequest \
 -d "customer[address][town]=London" \
 -d "customer[address][monthsAtAddress]=60" \
 -d "customer[gender]=male" \
+-d "customer[shippingAddress][postcode]=EC2A 4BX" \
+-d "customer[shippingAddress][street]=High street" \
+-d "customer[shippingAddress][flat]=B" \
+-d "customer[shippingAddress][buildingNumber]=115" \
+-d "customer[shippingAddress][buildingName]=Amanda apartments" \
+-d "customer[shippingAddress][town]=London" \
 -d "customer[email]=john.doe@domain.com" \
 -d "customer[phoneNumber]=+44201234567" \
 -d "customer[dateOfBirthYear]=1967" \
@@ -611,6 +620,42 @@ Example `London`
 
 ``` 
 Example `60`
+```
+
+`customer['shippingAddress']['postcode']` - Customer postcode (*Optional, String*
+
+``` 
+Example `EC2A 4BX`
+```
+
+`customer['shippingAddress']['street']` - Customer street (*Optional, String*)
+
+``` 
+Example `High street`
+```
+
+`customer['shippingAddress']['flat']` - Customer flat (*Optional, String*)
+
+``` 
+Example `B`
+```
+
+`customer['shippingAddress']['buildingNumber']` - Customer building number (*Optional, String*)
+
+``` 
+Example `115`
+```
+
+`customer['shippingAddress']['buildingName']` - Customer building name (*Optional, String*)
+
+``` 
+Example `Amanda apartments`
+```
+
+`customer['shippingAddress']['town']` - Customer town (*Optional, String*)
+
+``` 
+Example `London`
 ```
 
 `customer['gender']` - Customer gender (*Optional, String*)
