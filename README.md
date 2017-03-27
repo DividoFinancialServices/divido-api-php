@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.10*
+*Current version: v1.11*
 
 
 Getting started
@@ -73,6 +73,9 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+
+#### 2017-03-25
+- Added amount, products and reference to Cancellation Request. This allows partial cancellation of current unactivated amount
 
 #### 2017-03-13
 - Added shipping address to Credit Request
@@ -314,10 +317,12 @@ JSON example
             "country": "GB",
             "deferral_period": 0,
             "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+            "instalment_fee": 0,
             "interest_rate": 0,
             "max_deposit": 50,
             "min_amount": 150,
             "min_deposit": 0,
+            "setup_fee": 0,
             "text": "6 Month 0% Interest Free"
         },
         {
@@ -325,10 +330,12 @@ JSON example
             "country": "GB",
             "deferral_period": 0,
             "id": "F284D5F1D-E8AF-D4B7-E1AF-A352F6087352",
+            "instalment_fee": 0,
             "interest_rate": 0,
             "max_deposit": 50,
             "min_amount": 150,
             "min_deposit": 0,
+            "setup_fee": 0,
             "text": "12 Month 0% Interest Free"
         }
     ],
@@ -883,7 +890,14 @@ JSON example
                 "trackingNumber": "DHL291824419F"
             }
         ],
+        "cancellations": [],
+        "cancelledAmount": 0,
         "id": "C8A05742F-3040-44EC-C252-050FD8869F79",
+        "lender": {
+            "app": "Demo",
+            "id": "L10F2BE8F-EF89-E403-E38F-8589ED2E51F5",
+            "name": "Demo"
+        },
         "purchasePrice": 1197.5,
         "refundedAmount": 0,
         "refunds": [],
@@ -980,6 +994,14 @@ Mark an application as cancelled and notify the underwriter, only possible if ap
 curl https://secure.divido.com/v1/cancellation \
 -d merchant="live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102" \
 -d application="CAAC243AC-499A-84AF-DBBA-F58B9F7E798C" \
+-d "products[1][sku]=H10" \
+-d "products[1][name]=Restring Upgrade" \
+-d "products[1][quantity]=0.5" \
+-d "products[1][price]=89" \
+-d "products[1][vat]=20" \
+-d "products[1][attributes]=1" \
+-d amount=44.5 \
+-d reference="7321834" \
 -d comment="Customer requested to cancelled the order"
 ```
 
@@ -998,9 +1020,24 @@ JSON example
         "activationStatus": "AWAITING-ACTIVATION",
         "activations": [],
         "id": "CAAC243AC-499A-84AF-DBBA-F58B9F7E798C",
+        "lender": {
+            "app": "Demo",
+            "id": "L10F2BE8F-EF89-E403-E38F-8589ED2E51F5",
+            "name": "Demo"
+        },
         "purchasePrice": 1197.5,
         "refundedAmount": 0,
         "refunds": [],
+        "cancelledAmount": 44.5,
+        "cancellations": [
+            {
+                "date": "2017-03-27 02:46",
+                "amount": 44.5,
+                "status": "PENDING",
+                "reference": "ref: 1490582812",
+                "comment": ""
+            }
+        ],
         "status": "AWAITING-CANCELLATION"
     },
     "status": "ok"
@@ -1020,6 +1057,53 @@ Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 
 ``` 
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C `
+```
+
+`products['1']['sku']` - Product SKU (*Optional, String*)
+
+``` 
+Example `H10`
+```
+
+`products['1']['name']` - Product name/description (*Optional, String*)
+
+``` 
+Example `Restring Upgrade`
+```
+
+`products['1']['quantity']` - Product quantity (*Optional, String*)
+
+``` 
+Example `1`
+```
+
+`products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
+
+``` 
+Example `89`
+```
+`products['1']['vat']` - Product VAT percentage (*Optional, String*)
+
+``` 
+Example `20`
+```
+
+`products['1']['attributes']` - Product attributes (1=Service,2=Shipping fee,3=Payment fee, 10=Price is without VAT) (*Optional, String*)
+
+``` 
+Example `1,2`
+```
+
+`amount` - Sum of the refunded items (*Optional, String*)
+
+```
+Example `89`
+```
+
+`reference` - Your reference to identify the refund (*Optional, String*)
+
+``` 
+Example `7321834`
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
@@ -1076,7 +1160,14 @@ JSON example
                 "trackingNumber": "DHL291824419F"
             }
         ],
+        "cancellations": [],
+        "cancelledAmount": 0,
         "id": "C8A05742F-3040-44EC-C252-050FD8869F79",
+        "lender": {
+            "app": "Demo",
+            "id": "L10F2BE8F-EF89-E403-E38F-8589ED2E51F5",
+            "name": "Demo"
+        },
         "purchasePrice": 1197.5,
         "refundedAmount": 44.5,
         "refunds": [
@@ -1182,35 +1273,19 @@ JSON example
     "page": 1,
     "records": [
         {
-            "_creditAmount": "£ 1197.50",
-            "_depositAmount": "£ 0",
+        	  "_activatableAmount": "£ 0",
             "_activatedAmount": "£ 1197.50",
+            "_cancelableAmount": "£ 0",
+            "_cancelledAmount": "£ 0",
+            "_creditAmount": "£ 1197.50",
+            "_currentCreditAmount": "£ 1197.50",
+            "_depositAmount": "£ 0",
             "_monthlyPaymentAmount": "£ 199.58",
             "_purchasePrice": "£ 1197.50",
+            "_refundableAmount": "£ 1197.50",
             "_refundedAmount": "£ 0",
-            "agreementDuration": 6,
-            "channel": {
-                "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
-                "name": "Webshop.com",
-                "type": "webshop"
-            },
-            "country": "GB",
-            "createdDate": "2016-10-26 04:18",
-            "creditAmount": 1197.5,
-            "currency": "GBP",
-            "deferralPeriod": 0,
-            "depositAmount": 0,
-            "depositReference": "",
-            "depositStatus": "NO-DEPOSIT",
-            "email": "john.doe@domain.com",
-            "finance": {
-                "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
-                "maxDeposit": 50,
-                "minAmount": 150,
-                "minDeposit": 0,
-                "text": "6 Month 0% Interest Free"
-            },
-            "firstName": "John",
+            "_totalRepayableAmount": "£ 1197.48",
+            "activatableAmount": 740,
             "activatedAmount": 1197.5,
             "activations": [
                 {
@@ -1223,6 +1298,34 @@ JSON example
                     "trackingNumber": ""
                 }
             ],
+            "agreementDuration": 6,
+            "cancelableAmount": 0,
+            "cancellations": [],
+            "cancelledAmount": 0,
+            "channel": {
+                "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
+                "name": "Webshop.com",
+                "type": "webshop"
+            },
+            "country": "GB",
+            "createdDate": "2016-10-26 04:18",
+            "creditAmount": 1197.5,
+            "currentCreditAmount": 1197.5,
+            "currency": "GBP",
+            "deferralPeriod": 0,
+            "depositAmount": 0,
+            "depositReference": "",
+            "depositStatus": "NO-DEPOSIT",
+            "directSign": true,
+            "email": "john.doe@domain.com",
+            "finance": {
+                "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+                "maxDeposit": 50,
+                "minAmount": 150,
+                "minDeposit": 0,
+                "text": "6 Month 0% Interest Free"
+            },
+            "firstName": "John",
             "history": [
                 {
                     "date": "2016-10-26 04:20",
@@ -1254,6 +1357,7 @@ JSON example
                 }
             ],
             "id": "C92F7C65B-5C2D-6544-BB13-3E54243B9875",
+            "identityVerified": false,
             "interestRate": 0,
             "interestType": "simple",
             "lastName": "Doe",
@@ -1292,6 +1396,8 @@ JSON example
             "proposal": "PD56030F0-845C-ECF1-6118-0B26EFDCB273",
             "proposalCreator": null,
             "purchasePrice": 1197.5,
+            "reference": "test reference",
+            "refundableAmount": 1197.50,
             "refundedAmount": 0,
             "refunds": [],
             "status": "AWAITING-ACTIVATION",
@@ -1361,35 +1467,19 @@ JSON example
 ``` json
 {
     "record": {
-        "_creditAmount": "£ 1197.50",
-        "_depositAmount": "£ 0",
+    	  "_activatableAmount": "£ 0",
         "_activatedAmount": "£ 1197.50",
+        "_cancelableAmount": "£ 0",
+        "_cancelledAmount": "£ 0",
+        "_creditAmount": "£ 1197.50",
+        "_currentCreditAmount": "£ 1197.50",
+        "_depositAmount": "£ 0",
         "_monthlyPaymentAmount": "£ 199.58",
         "_purchasePrice": "£ 1197.50",
+        "_refundableAmount": "£ 1197.50",
         "_refundedAmount": "£ 0",
-        "agreementDuration": 6,
-        "channel": {
-            "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
-            "name": "Webshop.com",
-            "type": "webshop"
-        },
-        "country": "GB",
-        "createdDate": "2016-10-26 04:18",
-        "creditAmount": 1197.5,
-        "currency": "GBP",
-        "deferralPeriod": 0,
-        "depositAmount": 0,
-        "depositReference": "",
-        "depositStatus": "NO-DEPOSIT",
-        "email": "john.doe@domain.com",
-        "finance": {
-            "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
-            "maxDeposit": 50,
-            "minAmount": 150,
-            "minDeposit": 0,
-            "text": "6 Month 0% Interest Free"
-        },
-        "firstName": "John",
+        "_totalRepayableAmount": "£ 1197.48",
+        "activatableAmount": 740,
         "activatedAmount": 1197.5,
         "activations": [
             {
@@ -1402,6 +1492,34 @@ JSON example
                 "trackingNumber": ""
             }
         ],
+        "agreementDuration": 6,
+        "cancelableAmount": 0,
+        "cancellations": [],
+        "cancelledAmount": 0,
+        "channel": {
+            "id": "CDDB70595-BFE6-0B7D-EE5B-B09FFC89F98C",
+            "name": "Webshop.com",
+            "type": "webshop"
+        },
+        "country": "GB",
+        "createdDate": "2016-10-26 04:18",
+        "creditAmount": 1197.5,
+        "currentCreditAmount": 1197.5,
+        "currency": "GBP",
+        "deferralPeriod": 0,
+        "depositAmount": 0,
+        "depositReference": "",
+        "depositStatus": "NO-DEPOSIT",
+        "directSign": true,
+        "email": "john.doe@domain.com",
+        "finance": {
+            "id": "F06895E17-EE96-926E-7137-37BCABB9DCF7",
+            "maxDeposit": 50,
+            "minAmount": 150,
+            "minDeposit": 0,
+            "text": "6 Month 0% Interest Free"
+        },
+        "firstName": "John",
         "history": [
             {
                 "date": "2016-10-26 04:20",
@@ -1433,6 +1551,7 @@ JSON example
             }
         ],
         "id": "C92F7C65B-5C2D-6544-BB13-3E54243B9875",
+        "identityVerified": false,
         "interestRate": 0,
         "interestType": "simple",
         "lastName": "Doe",
@@ -1471,7 +1590,8 @@ JSON example
         "proposal": "PD56030F0-845C-ECF1-6118-0B26EFDCB273",
         "proposalCreator": null,
         "purchasePrice": 1197.5,
-        "reference": "100019",
+        "reference": "test reference",
+        "refundableAmount": 1197.50,
         "refundedAmount": 0,
         "refunds": [],
         "status": "AWAITING-ACTIVATION",
