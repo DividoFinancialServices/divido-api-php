@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.11*
+*Current version: v1.12*
 
 
 Getting started
@@ -73,6 +73,9 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+
+#### 2017-04-21
+- Added text element to address object, used for mergining one address line into flat, street, buildingNumber, buildingName.
 
 #### 2017-03-25
 - Added amount, products and reference to Cancellation Request. This allows partial cancellation of current unactivated amount
@@ -447,6 +450,7 @@ curl https://secure.divido.com/v1/creditrequest \
 -d "customer[middleNames]=L" \
 -d "customer[lastName]=Doe" \
 -d "customer[country]=GB" \
+-d "customer[address][text]=115 High Street EC2A 4BX" \
 -d "customer[address][postcode]=EC2A 4BX" \
 -d "customer[address][street]=High street" \
 -d "customer[address][flat]=B" \
@@ -586,6 +590,13 @@ Example `Doe`
 ``` 
 Example `GB`
 ```
+
+`customer['address']['text']` - Customer address in one line. We will try to match the address and split it up in street, flat, buildingNumber, buildingName. (*Optional, String*
+
+``` 
+Example `115 High street EC2A 4BX`
+```
+
 
 `customer['address']['postcode']` - Customer postcode (*Optional, String*
 
@@ -984,7 +995,7 @@ Example `Order was delivered to the customer by DHL`
 Cancellation
 ------------------
 
-Mark an application as cancelled and notify the underwriter, only possible if application is DRAFT, REFERRED, INFO-NEEDED, ACTION-CUSTOMER, ACTION-RETAILER, ACTION-LENDER, ACCEPTED, DEPOSIT-PAID, SIGNED.
+Mark an application as cancelled and notify the underwriter, only possible if application is DRAFT, REFERRED, INFO-NEEDED, ACTION-CUSTOMER, ACTION-RETAILER, ACTION-LENDER, ACCEPTED, DEPOSIT-PAID, PARTIALLY-ACTIVATED, SIGNED.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/cancellation `HTTP/1.1`
