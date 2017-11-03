@@ -74,6 +74,9 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 Change log
 ------------
 
+#### 2017-11-03
+- Updated example response from Applications endpoint to include `url` and `lenderLoanReference`
+
 #### 2017-04-21
 - Added text element to address object, used for mergining one address line into flat, street, buildingNumber, buildingName.
 
@@ -1373,7 +1376,8 @@ JSON example
             "interestType": "simple",
             "lastName": "Doe",
             "lender": "Demo",
-            "lenderReference": "",
+            "lenderLoanReference": "XY111111",
+            "lenderReference": "x22acc2e-2dc4-2ec2-3a7f-x4c5f02a0c3a",
             "metadata": {
                 "Invoice Number": "844001",
                 "Order Number": "100019"
@@ -1412,7 +1416,8 @@ JSON example
             "refundedAmount": 0,
             "refunds": [],
             "status": "AWAITING-ACTIVATION",
-            "totalRepayableAmount": 1197.5
+            "totalRepayableAmount": 1197.5,
+            "url": "https:\/\/secure.divido.com\/token\/0685cx87225604f0b75f53c6b6afe71x"
         },
         {
         	...
@@ -1567,6 +1572,7 @@ JSON example
         "interestType": "simple",
         "lastName": "Doe",
         "lender": "Demo",
+        "lenderLoanReference": "XY111111",
         "lenderReference": "",
         "metadata": {
             "Invoice Number": "844001",
@@ -1606,7 +1612,8 @@ JSON example
         "refundedAmount": 0,
         "refunds": [],
         "status": "AWAITING-ACTIVATION",
-        "totalRepayableAmount": 1197.5
+        "totalRepayableAmount": 1197.5,
+        "url": "https:\/\/secure.divido.com\/token\/0685cx87225604f0b75f53c6b6afe71x"
     },
     "status": "ok"
 }
