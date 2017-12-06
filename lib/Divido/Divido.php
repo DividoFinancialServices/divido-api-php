@@ -140,6 +140,8 @@ abstract class Divido
       self::$apiBase = self::$devApiBase;
     } else if (substr($apiKey,0,7) == 'sandbox') {
       self::$apiBase = self::$sandboxApiBase;
+    } else if (substr($apiKey,0,6) == 'docker') {     
+      self::$apiBase = self::$devApiBase;
     }
   }
 
