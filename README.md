@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.12*
+*Current version: v1.13*
 
 
 Getting started
@@ -59,15 +59,15 @@ Refund a part or whole of an activated application
 Returns a list of your applications. The applications are returned sorted by creation date, with the most recently created applications appearing first.
 
 ### Retrieve an application
-	
+
 Retrieves the details of an existing application. Supply the application ID and the API will return the corresponding application.
 
 ### Reporting / List all payment batches
-	
+
 Retrieves all payment batches.
 
 ### Reporting / Retrieve records from a payment batch
-	
+
 Retrieves the content of a payment batch. Supply the batch ID and the API will return all records.
 
 
@@ -231,7 +231,7 @@ The API server will send a POST request to the `response_url` associated with th
 
 `proposal`   Proposal ID
 
-`reference`   Third party reference (if supplied as part of the application) 
+`reference`   Third party reference (if supplied as part of the application)
 
 `status`   New status
 
@@ -267,13 +267,13 @@ Possible statuses
   - `DECLINED` - Applicaiton declined by Underwriter
 
   - `REFERRED` - Application referred by Underwriter, waiting for new status
-  
+
   - `INFO-NEEDED` - More information is required before decision
 
   - `ACTION-CUSTOMER` - Waiting for more information from Customer
 
   - `ACTION-RETAILER` - Waiting for more information from Merchant
- 
+
   - `ACTION-LENDER` - Waiting for more information from Underwriter
 
   - `DEPOSIT-PAID` - Deposit paid by customer
@@ -282,7 +282,7 @@ Possible statuses
 
   - `AWAITING-ACTIVATION` - Waiting for confirmation from Underwriter
 
-  - `AWAITING-CANCELLATION` - Waiting for confirmation from Underwriter  
+  - `AWAITING-CANCELLATION` - Waiting for confirmation from Underwriter
 
   - `PARTIALLY-ACTIVATED` - Application partially activated by merchant
 
@@ -352,19 +352,19 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `country` - The country code (*Optional, String*)
 
-``` 
+```
 Example `GB`
 ```
-  
+
 
 
 Deal Calculator
@@ -380,24 +380,24 @@ The deal calculator calculates the payment terms for various terms and deposits.
 JSON example
 
 ``` json
-{  
-    "status": 'ok',  
-    "purchase_price": 2000,  
-    "deposit_amount": 200,  
-    "credit_amount": 1800,  
-    "monthly_payment_amount": 150,  
-    "total_repayable_amount": 1800,  
-    "agreement_duration": 12,  
-    "interest_rate": 0.0,  
+{
+    "status": 'ok',
+    "purchase_price": 2000,
+    "deposit_amount": 200,
+    "credit_amount": 1800,
+    "monthly_payment_amount": 150,
+    "total_repayable_amount": 1800,
+    "agreement_duration": 12,
+    "interest_rate": 0.0,
     "interest_type": "APR"
- }  
+ }
 ```
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
@@ -405,25 +405,25 @@ Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 `amount`
   - The total value of the order (*Required, Float*)
 
-``` 
+```
 Example `2000.00`
 ```
 
   `deposit` - The value of the deposit. (*Required, Float*)
 
-``` 
+```
 Example `200`
 ```
 
   `country` - The country code (*Required, String*)
 
-``` 
+```
 Example `GB`
 ```
 
   `finance` - The finance code (*Required, String*)
 
-``` 
+```
 Example `FA48EC74D-D95D-73A9-EC99-004FBE14A027`
 ```
 
@@ -513,292 +513,292 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-    -  
-  
+    -
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `deposit` - The value of the deposit. (*Required, Float*)
 
-``` 
+```
 Example `100`
 ```
 
 `finance` - The finance code (*Required, String*)
 
-``` 
+```
 Example `F23B150D4-9D00-724A-6DFA-A1E726F6761A`
 ```
 
 `directSign` - Whether or not to immediately go to signing after approval (*Optional, Boolean*, Default is `true`)
 
-``` 
+```
 Example `true`
 ```
 
 
 `country` - The country code (*Required, String*)
 
-``` 
+```
 Example `GB`
 ```
 
 `language` - The country code (*Required, String*)
 
-``` 
+```
 Example `EN`
 ```
 
 `currency` - The currency code (*Required, String*)
 
-``` 
+```
 Example `GBP`
 ```
 
 `amount` - Order total in same currency as proposal. Used to validate the total from product line items. (*Optional, Float*)
 
-``` 
+```
 Example `1197.5`
 ```
 
 `reference` - Your intenral reference, will be returned in webhooks. (*Optional, Float*)
 
-``` 
+```
 Example `100019`
 ```
 
 `customer['firstName']` - Customer first name (*Optional, String*)
 
-``` 
+```
 Example `Jane`
 ```
 
 `customer['middleNames']` - Customer middle names (*Optional, String*)
 
-``` 
+```
 Example `L`
 ```
 
 `customer['lastName']` - Customer last name (*Optional, String*)
 
-``` 
+```
 Example `Doe`
 ```
 
 `customer['country']` - Customer country (*Optional, String*)
 
-``` 
+```
 Example `GB`
 ```
 
 `customer['address']['text']` - Customer address in one line. We will try to match the address and split it up in street, flat, buildingNumber, buildingName. (*Optional, String*
 
-``` 
+```
 Example `115 High street EC2A 4BX`
 ```
 
 
 `customer['address']['postcode']` - Customer postcode (*Optional, String*
 
-``` 
+```
 Example `EC2A 4BX`
 ```
 
 `customer['address']['street']` - Customer street (*Optional, String*)
 
-``` 
+```
 Example `High street`
 ```
 
 `customer['address']['flat']` - Customer flat (*Optional, String*)
 
-``` 
+```
 Example `B`
 ```
 
 `customer['address']['buildingNumber']` - Customer building number (*Optional, String*)
 
-``` 
+```
 Example `115`
 ```
 
 `customer['address']['buildingName']` - Customer building name (*Optional, String*)
 
-``` 
+```
 Example `Amanda apartments`
 ```
 
 `customer['address']['town']` - Customer town (*Optional, String*)
 
-``` 
+```
 Example `London`
 ```
 
 `customer['address']['monthsAtAddress']` - Customer months at address (*Optional, String*)
 
-``` 
+```
 Example `60`
 ```
 
 `customer['shippingAddress']['postcode']` - Customer postcode (*Optional, String*
 
-``` 
+```
 Example `EC2A 4BX`
 ```
 
 `customer['shippingAddress']['street']` - Customer street (*Optional, String*)
 
-``` 
+```
 Example `High street`
 ```
 
 `customer['shippingAddress']['flat']` - Customer flat (*Optional, String*)
 
-``` 
+```
 Example `B`
 ```
 
 `customer['shippingAddress']['buildingNumber']` - Customer building number (*Optional, String*)
 
-``` 
+```
 Example `115`
 ```
 
 `customer['shippingAddress']['buildingName']` - Customer building name (*Optional, String*)
 
-``` 
+```
 Example `Amanda apartments`
 ```
 
 `customer['shippingAddress']['town']` - Customer town (*Optional, String*)
 
-``` 
+```
 Example `London`
 ```
 
 `customer['gender']` - Customer gender (*Optional, String*)
 
-``` 
+```
 Example `male`
 ```
 
 `customer['email']` - Customer email (*Optional, String*)
 
-``` 
+```
 Example `jane.doe@email.com`
 ```
 
 `customer['phoneNumber']` - Customer phone number (*Optional, String*)
 
-``` 
+```
 Example `0201234567`
 ```
 
 `customer['dateOfBirthYear']` - Customer year of birth (*Optional, String*)
 
-``` 
+```
 Example `1967`
 ```
 
 `customer['dateOfBirthMonth']` - Customer month of birth (*Optional, String*)
 
-``` 
+```
 Example `07`
 ```
 
 `customer['dateOfBirthDay']` - Customer day of birth (*Optional, String*)
 
-``` 
+```
 Example `01`
 ```
 
 `customer['bank']['sortCode']` - Customer bank sort code (*Optional, String*)
 
-``` 
+```
 Example `123456`
 ```
 
 `customer['bank']['accountNumber']` - Customer bank account number (*Optional, String*)
 
-``` 
+```
 Example `12345678`
 ```
 
 `metadata['key']` - metadata key (*Optional, String*)
 
-``` 
+```
 Example `Invoice Number`
 ```
 
 `metadata['value']` - metadata value (*Optional, String*)
 
-``` 
+```
 Example `844001`
 ```
 
 `products['1']['sku']` - Product SKU (*Optional, String*)
 
-``` 
+```
 Example `GIB100`
 ```
 
 `products['1']['name']` - Product name/description (*Optional, String*)
 
-``` 
+```
 Example `Gibson Les Paul Studio Raw Guitar`
 ```
 
 `products['1']['quantity']` - Product quantity (*Optional, String*)
 
-``` 
+```
 Example `1`
 ```
 
 `products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
 
-``` 
+```
 Example `1153.00`
 ```
 `products['1']['vat']` - Product VAT percentage (*Optional, String*)
 
-``` 
+```
 Example `20`
 ```
 
 `products['1']['unit']` - Product unit (*Optional, String*)
-``` 
+```
 Example `pcs`
 ```
 
 `products['1']['image']` - Product image (*Optional, String*)
-``` 
+```
 Example `http://www.webshop.com/images/GIB100.png`
 ```
 
 `products['1']['attributes']` - Product attributes (1=Service fee,2=Shipping fee,3=Payment fee,6=Discount, 10=Price is without VAT, 20=Line item with order VAT sum) (*Optional, String*)
 
-``` 
+```
 Example `1,2`
 ```
 
 `responseUrl` - The URL where we send notification about the payment (*Optional, String*)
 
-``` 
+```
 Example `http://www.webshop.com/response.php`
 ```
 
 `checkoutUrl` - A URL which Divido redirects the customer to if they get declined or wish to cancel their application (*Optional, String*)
 
-``` 
+```
 Example `http://www.webshop.com/checkout`
 ```
 
 `redirectUrl` - The URL the customer will get redirected to after a successful application (*Optional, String*)
 
-``` 
+```
 Example `http://www.webshop.com/success.html`
 ```
 
@@ -925,7 +925,7 @@ JSON example
 #### Parameters
 
 `merchant` - Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 ```
@@ -938,30 +938,30 @@ Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 
 `products['1']['sku']` - Product SKU (*Optional, String*)
 
-``` 
+```
 Example `GIB100`
 ```
 
 `products['1']['name']` - Product name/description (*Optional, String*)
 
-``` 
+```
 Example `Gibson Les Paul Studio Raw Guitar`
 ```
 
 `products['1']['quantity']` - Product quantity (*Optional, String*)
 
-``` 
+```
 Example `1`
 ```
 
 `products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
 
-``` 
+```
 Example `1153.00`
 ```
 `products['1']['vat']` - Product VAT percentage (*Optional, String*)
 
-``` 
+```
 Example `20`
 ```
 
@@ -985,7 +985,7 @@ Example `DHL291824419F`
 
 `reference` - Your reference to identify the activation (*Optional, String*)
 
-``` 
+```
 Example `9482471 `
 ```
 
@@ -1069,42 +1069,42 @@ Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 
 `application` - The application or proposal identifier. (*Required, String*)
 
-``` 
+```
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C `
 ```
 
 `products['1']['sku']` - Product SKU (*Optional, String*)
 
-``` 
+```
 Example `H10`
 ```
 
 `products['1']['name']` - Product name/description (*Optional, String*)
 
-``` 
+```
 Example `Restring Upgrade`
 ```
 
 `products['1']['quantity']` - Product quantity (*Optional, String*)
 
-``` 
+```
 Example `1`
 ```
 
 `products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
 
-``` 
+```
 Example `89`
 ```
 `products['1']['vat']` - Product VAT percentage (*Optional, String*)
 
-``` 
+```
 Example `20`
 ```
 
 `products['1']['attributes']` - Product attributes (1=Service,2=Shipping fee,3=Payment fee, 10=Price is without VAT) (*Optional, String*)
 
-``` 
+```
 Example `1,2`
 ```
 
@@ -1116,13 +1116,13 @@ Example `89`
 
 `reference` - Your reference to identify the refund (*Optional, String*)
 
-``` 
+```
 Example `7321834`
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 
-``` 
+```
 Example `Customer requested to cancelled the order`
 ```
 
@@ -1210,42 +1210,42 @@ Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102 `
 
 `application` - The application or proposal identifier. (*Required, String*)
 
-``` 
+```
 Example `CAAC243AC-499A-84AF-DBBA-F58B9F7E798C`
 ```
 
 `products['1']['sku']` - Product SKU (*Optional, String*)
 
-``` 
+```
 Example `H10`
 ```
 
 `products['1']['name']` - Product name/description (*Optional, String*)
 
-``` 
+```
 Example `Restring Upgrade`
 ```
 
 `products['1']['quantity']` - Product quantity (*Optional, String*)
 
-``` 
+```
 Example `0.5`
 ```
 
 `products['1']['price']` - Product price in same currency as proposal (*Optional, String*)
 
-``` 
+```
 Example `89`
 ```
 `products['1']['vat']` - Product VAT percentage (*Optional, String*)
 
-``` 
+```
 Example `20`
 ```
 
 `products['1']['attributes']` - Product attributes (1=Service,2=Shipping fee,3=Payment fee, 10=Price is without VAT) (*Optional, String*)
 
-``` 
+```
 Example `1,2`
 ```
 
@@ -1257,13 +1257,13 @@ Example `44.5`
 
 `reference` - Your reference to identify the refund (*Optional, String*)
 
-``` 
+```
 Example `7321834 `
 ```
 
 `comment` - Comment to the underwriter, can be order number or other information (*Optional, String*)
 
-``` 
+```
 Example `Customer returned part of order`
 ```
 
@@ -1437,34 +1437,34 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `country` - Filter by country code (*Optional, String*)
 
-``` 
+```
 Example `GB`
 ```
 
 `status` - Filter by status (*Optional, String*)
 
-``` 
+```
 Example `SIGNED`
 ```
 
 `proposal` - Filter by proposal (*Optional, String*)
 
-``` 
+```
 Example `PAA717844-EE9D-78AF-D11C-EDCC1D180F87`
 ```
 
 `page` - Show page, default 1 (*Optional, String*)
 
-``` 
+```
 Example `2`
 ```
 
@@ -1622,16 +1622,16 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `id` - Application id (*Required, String*)
 
-``` 
+```
 Example `C84047A6D-89B2-FECF-D2B4-168444F5178C`
 ```
 
@@ -1680,28 +1680,28 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `currency` - Filter by currency code (*Optional, String*)
 
-``` 
+```
 Example `GBP`
 ```
 
 `lender` - Filter by lender ID (*Optional, String*)
 
-``` 
+```
 Example `L07F46CDF-5296-D190-1F2D-A1B5FD869B72 `
 ```
 
 `page` - Show page, default 1 (*Optional, String*)
 
-``` 
+```
 Example `2`
 ```
 
@@ -1754,15 +1754,15 @@ JSON example
 
 #### Parameters
 
-`merchant` 
+`merchant`
     -  Your unique account identifier (*Required, String*)
-  
+
 ```
 Example `live_c31be25be.fb2ee4bc8a66e1ecd797c56f03621102`
 ```
 
 `id` - Batch id (*Required, String*)
 
-``` 
+```
 Example `PB0506EBA-870B-FFC2-FCAB-250D1B1291BD `
 ```
