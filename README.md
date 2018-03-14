@@ -224,10 +224,15 @@ To alert you of any changes in the status of your resources, Divido provides web
 List of IP addresses
 =======================
 52.211.249.159 (production)
+
 54.72.119.96 (production)
+
 52.211.116.109 (production)
+
 52.212.234.209 (production)
+
 34.249.63.178 (sandbox)
+
 
 Request
 ---------------
