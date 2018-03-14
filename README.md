@@ -5,7 +5,7 @@ This is the documentation for the Divido API.
 
 Sign up for an account to get instant access to our sandbox environment.
 
-*Current version: v1.14*
+*Current version: v1.15*
 
 
 Getting started
@@ -73,6 +73,8 @@ Retrieves the content of a payment batch. Supply the batch ID and the API will r
 
 Change log
 ------------
+#### 2018-14-03
+- Added a list of IP addresses to the webhook section (For production and Sandbox) 
 
 #### 2017-11-03
 - Updated example response from Applications endpoint to include `url` and `lenderLoanReference`
@@ -218,6 +220,14 @@ Webhooks
 ===========
 
 To alert you of any changes in the status of your resources, Divido provides webhooks. These are POST requests to your server that are sent as soon as a resource changes status. The body of the request contains details of the change.
+
+List of IP addresses
+=======================
+52.211.249.159 (production)
+54.72.119.96 (production)
+52.211.116.109 (production)
+52.212.234.209 (production)
+34.249.63.178 (sandbox)
 
 Request
 ---------------
