@@ -222,16 +222,16 @@ Webhooks
 To alert you of any changes in the status of your resources, Divido provides webhooks. These are POST requests to your server that are sent as soon as a resource changes status. The body of the request contains details of the change.
 
 List of IP addresses
-=======================
-52.211.249.159 (production)
+===========
+`52.211.249.159` production
 
-54.72.119.96 (production)
+`54.72.119.96` production
 
-52.211.116.109 (production)
+`52.211.116.109` production
 
-52.212.234.209 (production)
+`52.212.234.209` production
 
-34.249.63.178 (sandbox)
+`34.249.63.178` sandbox
 
 
 Request
