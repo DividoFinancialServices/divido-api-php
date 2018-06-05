@@ -294,6 +294,8 @@ Possible statuses
   - `DEPOSIT-PAID` - Deposit paid by customer
 
   - `SIGNED` - Customer has signed all contracts
+  
+  - `READY` - Order is ready to be dispatched
 
   - `AWAITING-ACTIVATION` - Waiting for confirmation from Underwriter
 
@@ -1013,7 +1015,7 @@ Example `Order was delivered to the customer by DHL`
 Cancellation
 ------------------
 
-Mark an application as cancelled and notify the underwriter, only possible if application is DRAFT, REFERRED, INFO-NEEDED, ACTION-CUSTOMER, ACTION-RETAILER, ACTION-LENDER, ACCEPTED, DEPOSIT-PAID, PARTIALLY-ACTIVATED, SIGNED.
+Mark an application as cancelled and notify the underwriter, only possible if application is DRAFT, REFERRED, INFO-NEEDED, ACTION-CUSTOMER, ACTION-RETAILER, ACTION-LENDER, ACCEPTED, DEPOSIT-PAID, PARTIALLY-ACTIVATED, SIGNED, READY.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/cancellation `HTTP/1.1`
