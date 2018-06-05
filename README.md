@@ -309,10 +309,6 @@ Possible statuses
 
   - `REFUNDED` - Whole Application refunded
 
-  - `DISPUTED` - Dispute raised by Merchant or Underwriter
-
-  - `LOAN-REVERSAL` - Loan reversal in progress
-
   - `COMPLETED` - Application completed (after cool down period)
 
 
