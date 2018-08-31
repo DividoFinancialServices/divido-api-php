@@ -1481,7 +1481,7 @@ Example `PAA717844-EE9D-78AF-D11C-EDCC1D180F87`
 Example `2`
 ```
 
-Retrieve an applications
+Retrieve an application
 ------------------
 
 Retrieves the details of an existing application. Supply the application ID and the API will return the corresponding application.
