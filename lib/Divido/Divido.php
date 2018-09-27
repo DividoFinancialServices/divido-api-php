@@ -45,7 +45,7 @@ abstract class Divido
     /**
      * @var string The base URL for the Divido API.
      */
-    public static $testingApiBase = 'https://secure.test.divido.com';
+    public static $testingApiBase = 'https://secure.testing.divido.com';
 
     /**
      * @var string The base URL for the Divido API.
