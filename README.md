@@ -275,7 +275,7 @@ JSON example
 Possible statuses
 ---------------
 
-  - `DRAFT` - Proposal send to Underwriter, waiting for decision
+  - `PROPOSAL` - Proposal send to Underwriter, waiting for decision
 
   - `ACCEPTED` - Application accepted by Underwriter
 
