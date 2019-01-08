@@ -80,7 +80,7 @@ Change log
 - Updated example response from Applications endpoint to include `url` and `lenderLoanReference`
 
 #### 2017-04-21
-- Added text element to address object, used for mergining one address line into flat, street, buildingNumber, buildingName.
+- Added text element to address object, used for merging one address line into flat, street, buildingNumber, buildingName.
 
 #### 2017-03-25
 - Added amount, products and reference to Cancellation Request. This allows partial cancellation of current unactivated amount
@@ -122,7 +122,7 @@ Change log
 
 #### 2016-10-30
 
-- Added refunds, fulfillments, fulfillmentStatus to respones
+- Added refunds, fulfilments, fulfillmentStatus to responses
 
 #### 2016-10-18
 
@@ -158,7 +158,7 @@ Change log
 - Campaigns changed to Finances
 
 
-Offical Libraries
+Official Libraries
 ---------------
 
 We strongly encourage use of our official libraries for accessing the Divido API. Our official libraries are listed below, as well as community supported libraries.
@@ -169,6 +169,9 @@ Install from source
 
   `git clone https://github.com/DividoFinancialServices/divido-api-php.git`
 
+Require with Composer
+
+  `composer require divido/divido-php`
 
 Community libraries
 ---------------
@@ -279,7 +282,7 @@ Possible statuses
 
   - `ACCEPTED` - Application accepted by Underwriter
 
-  - `DECLINED` - Applicaiton declined by Underwriter
+  - `DECLINED` - Application declined by Underwriter
 
   - `REFERRED` - Application referred by Underwriter, waiting for new status
 
@@ -577,7 +580,7 @@ Example `GBP`
 Example `1197.5`
 ```
 
-`reference` - Your intenral reference, will be returned in webhooks. (*Optional, Float*)
+`reference` - Your internal reference, will be returned in webhooks. (*Optional, Float*)
 
 ```
 Example `100019`
@@ -865,7 +868,7 @@ JSON example
 Activation
 ------------------
 
-Activate whole or part of an application and initialise a payout from the underwriter. Activate part of the application by specifing the products that should be activated. If no product data is submitted, the whole application will be activated.
+Activate whole or part of an application and initialise a payout from the underwriter. Activate part of the application by specifying the products that should be activated. If no product data is submitted, the whole application will be activated.
 
 #### Example Request
    `POST` https://secure.divido.com/v1/activation `HTTP/1.1`
